@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<Graphs xmlns="https://poets-project.org/schemas/virtual-graph-schema-v2">
+	<GraphType id="number_tree">
+		<Documentation>
+		This implements a simple clock-tree benchmark. The graph consists of
+		a root node, branch nodes, and leaf nodes. The root node initiates
+		clock pulses, the branch nodes fan them out, and the leaf nodes
+		reflect them back again.
+		</Documentation>
+
+		<MetaData>
+		"native_dimension":2
+		</MetaData>
+
+		<Properties>
+			<Scalar name="max_ticks" type="uint32_t" default="100"/>
+		</Properties>
+
+		<MessageTypes>
+			<MessageType id="__init__">
+				<Documentation>
+					This is to initilize addition value to each node
+				</Documentation>
+				<Message>
+					<Scalar name="addition" type="int32_t" default="1"/>
+				</Message>
+			</MessageType>
+
+			<MessageType id="output">
+				<Documentation>Send a message to the application.</Documentation>
+				<Message>
+					<Scalar name="ticks" type="uint32_t"/>
+					<Scalar name="thisNumber" type="int32_t"/>
+				</Message>
+
+			</MessageType>
+
+			<MessageType id="tick">
+				<Documentation>A tick being sent from the root through to the leaves</Documentation>
+				<Message>
+					<Scalar name="thisNumber" type="int32_t"/>
+				</Message>
+			</MessageType>
+
+			<MessageType id="ack">
+				<Documentation>An acknowledgement being sent from the leaves back through to the root</Documentation>
+				<Message>
+					<Scalar name="thisNumber" type="int32_t"/>
+				</Message>
+			</MessageType>
+		</MessageTypes>
+
+		<DeviceTypes>
+			<!-- all device tpyes -->
+			<!-- root -->
+			<DeviceType id="root">
+				<Properties>
+					<Scalar type="uint32_t" name="fanout"/>
+					<Scalar type="int32_t" name="addition" default="1"/>
+				</Properties>
+
+				<State>
+					<Scalar type="uint32_t" name="cycle" />
+					<Scalar type="uint32_t" name="pending" />
+					<Scalar type="uint32_t" name="doExport" />
+					<Scalar type="int32_t" name="whatNumber" />
+				</State>
+				<!-- <InputPin name="init" messageTypeId="__init__">
+					<OnSend><![CDATA[
+					handler_log(1, "addition value %d", message->addition)
+					]]>
+					</OnSend>
+				</InputPin> -->
+				<ReadyToSend><![CDATA[
+			*readyToSend = 0; 
+			if(deviceState->doExport){
+				*readyToSend = OUTPUT_FLAG_root_output;
+			}else if(deviceState->pending==0){
+			 	*readyToSend = OUTPUT_FLAG_root_tick_out;
+			}
+		]]>				</ReadyToSend>
+
+				<OutputPin name="tick_out" messageTypeId="tick">
+					<OnSend><![CDATA[
+		  handler_log(2, "root_tick_out, cycle=0x%x, max_ticks=0x%x", deviceState->cycle, graphProperties->max_ticks);
+			assert(deviceState->pending==0);
+			assert(deviceState->doExport==0);
+			deviceState->cycle++;
+			if(deviceState->cycle >= graphProperties->max_ticks){
+				handler_exit(0);
+				*doSend=false;
+			}else{
+				deviceState->pending=deviceProperties->fanout;
+				deviceState->doExport=1;
+        message->thisNumber=deviceState->whatNumber + 
+					deviceProperties->addition;
+			}
+		  ]]>					</OnSend>
+				</OutputPin>
+
+				<OutputPin name="output" messageTypeId="output" application="true">
+					<OnSend><![CDATA[
+    handler_log(1, "export = %u, input number = %u", deviceState->cycle,
+      deviceState->whatNumber);
+		handler_export_key_value(0, deviceState->cycle);
+		deviceState->doExport=0;
+		message->ticks=deviceState->cycle;
+		message->thisNumber = deviceState->whatNumber;
+		]]>					</OnSend>
+				</OutputPin>
+
+				<InputPin name="ack_in" messageTypeId="ack">
+					<OnReceive><![CDATA[
+		  deviceState->pending--;
+      deviceState->whatNumber=message->thisNumber;
+		  ]]>					</OnReceive>
+				</InputPin>
+
+			</DeviceType>
+
+			<DeviceType id="branch">
+				<Properties>
+					<Scalar type="uint32_t" name="fanout"/>
+					<Scalar type="int32_t" name="addition" default="1"/>
+				</Properties>
+
+				<State>
+					<!--
+			0 : Idle
+			1 : Tick received, but not forwarded
+			2 : All acks received
+			2+n : Waiting for n acks to be received
+		-->
+					<Scalar type="int32_t" name="status" />
+					<Scalar type="int32_t" name="whatNumber" />
+				</State>
+
+				<ReadyToSend><![CDATA[
+			if(deviceState->status==0){ *readyToSend=0;
+			}else if(deviceState->status==1){
+				*readyToSend = OUTPUT_FLAG_branch_tick_out;
+			}else if(deviceState->status==2){
+				*readyToSend = OUTPUT_FLAG_branch_ack_out; }else{ *readyToSend=0;
+			}
+		]]>				</ReadyToSend>
+
+				<InputPin name="tick_in" messageTypeId="tick">
+					<OnReceive><![CDATA[
+	    deviceState->status=1;
+      deviceState->whatNumber=message->thisNumber;
+	    ]]>					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="tick_out" messageTypeId="tick">
+					<OnSend><![CDATA[
+      handler_log(2, "branch_tick_out, send %u", deviceState->whatNumber);
+	    deviceState->status=2+deviceProperties->fanout;
+      message->thisNumber=deviceState->whatNumber + 
+					deviceProperties->addition;
+      deviceState->whatNumber=-1;
+	    ]]>					</OnSend>
+				</OutputPin>
+
+				<InputPin name="ack_in" messageTypeId="ack">
+					<OnReceive><![CDATA[
+	    deviceState->status--;
+      deviceState->whatNumber=message->thisNumber;
+	    ]]>					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="ack_out" messageTypeId="ack">
+					<OnSend><![CDATA[
+      handler_log(2, "branch_tick_out, send %u", deviceState->whatNumber);
+	    deviceState->status=0;
+      message->thisNumber=deviceState->whatNumber;
+      deviceState->whatNumber=-1;
+	    ]]>					</OnSend>
+				</OutputPin>
+			</DeviceType>
+
+			<!-- leaf -->
+			<DeviceType id="leaf">
+				<Properties>
+					<Scalar type="int32_t" name="addition" default="1"/>
+				</Properties>
+				<State>
+					<Scalar type="int8_t" name="ready" />
+					<Scalar type="int32_t" name="whatNumber" />
+				</State>
+
+				<ReadyToSend><![CDATA[
+		*readyToSend = deviceState->ready ? OUTPUT_FLAG_leaf_ack_out : 0;
+		]]>				</ReadyToSend>
+
+				<InputPin name="tick_in" messageTypeId="tick">
+					<OnReceive><![CDATA[
+			deviceState->ready=true;
+      deviceState->whatNumber=message->thisNumber;
+			]]>
+					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="ack_out" messageTypeId="ack">
+					<OnSend><![CDATA[
+			deviceState->ready=false;
+      message->thisNumber=deviceState->whatNumber;
+      deviceState->whatNumber=-1;
+			]]>					</OnSend>
+				</OutputPin>
+			</DeviceType>
+		</DeviceTypes>
+	</GraphType>
+</Graphs>
+

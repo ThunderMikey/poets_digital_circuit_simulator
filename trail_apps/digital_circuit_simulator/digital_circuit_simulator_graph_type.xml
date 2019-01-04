@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<Graphs xmlns="https://poets-project.org/schemas/virtual-graph-schema-v2">
+	<GraphType id="circuit_gates">
+		<Documentation>
+		This is a library of gates for digital circuit simulations.
+		gate_type:
+			0: and
+			1: or
+			2: xor
+		</Documentation>
+
+		<MetaData>
+		"native_dimension":2
+		</MetaData>
+
+		<Properties>
+			<Scalar name="max_ticks" type="uint32_t" default="100"/>
+		</Properties>
+		<SharedCode><![CDATA[
+			uint8_t and2_gate(uint8_t in0, uint8_t in1){
+				return (uint8_t)(in0 && in1);
+			}
+			uint8_t or2_gate(uint8_t in0, uint8_t in1){
+				return (uint8_t)(in0 || in1);
+			}
+			uint8_t xor2_gate(uint8_t in0, uint8_t in1){
+				uint8_t sum = in0 + in1;
+				return (uint8_t)(sum == 1);
+			}
+		]]>
+		</SharedCode>
+		<MessageTypes>
+			<MessageType id="__init__">
+				<Documentation>
+					This doesn't have any properties
+				</Documentation>
+			</MessageType>
+
+			<MessageType id="wire">
+				<Documentation>
+					This meesage type represents a wire.
+				</Documentation>
+				<Message>
+					<Scalar name="logic" type="uint8_t"/>
+				</Message>
+            </MessageType>
+		</MessageTypes>
+
+		<DeviceTypes>
+			<DeviceType id="universal2">
+				<Properties>
+					<Scalar type="uint32_t" name="gate_type" default="0" />
+					<Scalar type="uint8_t" name="output_logic" default="0" />
+				</Properties>
+				<State>
+					<Scalar type="uint32_t" name="no_ticks" />
+					<Scalar type="uint8_t" name="logic_in0" />
+					<Scalar type="uint8_t" name="logic_in1" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+		  			<OnReceive><![CDATA[
+						deviceState->logic_in0 = 0;
+						deviceState->logic_in1 = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
+				<ReadyToSend><![CDATA[
+					*readyToSend = OUTPUT_FLAG_universal2_out;
+				]]>
+				</ReadyToSend>
+
+				<InputPin name="in0" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->logic_in0 = message->logic;
+					]]>
+					</OnReceive>
+				</InputPin>
+
+				<InputPin name="in1" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->logic_in1 = message->logic;
+					]]>
+					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="out" messageTypeId="wire">
+					<OnSend><![CDATA[
+						switch(deviceProperties->gate_type){
+							case 0:
+								message->logic = and2_gate(
+									deviceState->logic_in0,
+									deviceState->logic_in1
+									);
+								break;
+							case 1:
+								message->logic = or2_gate(
+									deviceState->logic_in0,
+									deviceState->logic_in1
+									);
+								break;
+							case 2:
+								message->logic = xor2_gate(
+									deviceState->logic_in0,
+									deviceState->logic_in1
+									);
+								break;
+						}
+						if (deviceProperties->output_logic != 0){
+							handler_log(2, "out value: %u",
+								message->logic);
+						}
+					]]>
+					</OnSend>
+				</OutputPin>
+			</DeviceType>
+
+			<DeviceType id="input_terminal">
+				<Properties>
+					<Scalar type="uint8_t" name="flip_interval" default="3"/>
+				</Properties>
+				<State>
+					<Scalar type="uint8_t" name="current_iteration" />
+					<Scalar type="uint8_t" name="current_logic" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+					<OnReceive><![CDATA[
+						deviceState->current_iteration = 0;
+						deviceState->current_logic = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<ReadyToSend><![CDATA[
+					*readyToSend = OUTPUT_FLAG_input_terminal_out;
+				]]>
+				</ReadyToSend>
+				<OutputPin name="out" messageTypeId="wire">
+					<OnSend><![CDATA[
+						message->logic = deviceState->current_logic;
+						if (deviceState->current_iteration ==
+							deviceProperties->flip_interval){
+							deviceState->current_logic =
+								!deviceState->current_logic;
+							deviceState->current_iteration = 0;
+						}
+						else{
+							deviceState->current_iteration++;
+						}
+						handler_log(2, "value: %u",
+							message->logic);
+					]]>
+					</OnSend>
+				</OutputPin>
+			</DeviceType>
+
+			<DeviceType id="output_terminal">
+				<State>
+				</State>
+				<ReadyToSend><![CDATA[
+					*readyToSend=0;
+				]]>
+				</ReadyToSend>
+				<InputPin name="receive" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						handler_log(2, "value: %u",
+							message->logic);
+					]]>
+					</OnReceive>
+				</InputPin>
+			</DeviceType>
+
+			<DeviceType id="exit_node">
+				<Properties>
+					<!-- 0: no max, [1, 2^32-1]: max_ticks -->
+					<Scalar type="uint32_t" name="max_ticks" default="100" />
+				</Properties>
+				
+				<State>
+					<Scalar type="uint32_t" name="no_ticks" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+		  			<OnReceive><![CDATA[
+						deviceState->no_ticks = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<ReadyToSend><![CDATA[
+					*readyToSend=0;
+				]]>
+				</ReadyToSend>
+
+				<InputPin name="done" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->no_ticks++;
+						if(deviceState->no_ticks == deviceProperties->max_ticks){
+							handler_exit(0);
+						}
+					]]>
+					</OnReceive>
+				</InputPin>
+			</DeviceType>
+		</DeviceTypes>
+	</GraphType>
+</Graphs>
+

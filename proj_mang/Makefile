@@ -1,0 +1,11 @@
+reports:
+	mkdir -p reports
+
+u := $(shell id -u)
+p := $(shell pwd)
+reports/overview.html: fyp.tjp reports
+	#tj3 fyp.tjp -o reports
+	docker run --rm --user $u:$u \
+		-v $p:/proj_mang \
+		tmikey/tj3 \
+		tj3 /proj_mang/fyp.tjp -o /proj_mang/reports

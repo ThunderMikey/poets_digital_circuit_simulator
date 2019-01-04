@@ -1,0 +1,154 @@
+project poets "Digital Circuit Simulation on POETS" 2018-10-22 - 2019-06-30 {
+  #timezone "Europe/London"
+  # abbreviated month name %b
+  timeformat "%a %d-%b-%y"
+  numberformat "-" "" "," "." 1
+  workinghours sun - sat 10:00 - 18:00
+}
+
+
+shift term1 "term 1 time" {
+  workinghours sun - sat 20:00 - 21:00
+}
+shift term2 "term 2 time" {
+  workinghours sun - sat 20:00 - 22:00
+}
+shift term3 "term 3 time" {
+  workinghours sun - sat 10:00 - 15:00
+}
+shift holiday "holiday schedule" {
+  workinghours sun - sat 10:00 - 17:00
+}
+
+resource mike "Mike Chen" {
+  email "yc12015@ic.ac.uk"
+  shifts term1 2018-10-01 - 2018-12-14,
+         holiday 2018-12-14 - 2019-01-05,
+         term2 2019-01-05 - 2019-03-22,
+         holiday 2019-03-22 - 2019-04-27,
+         term3 2019-04-27 - 2019-06-30
+  leaves holiday "Christmas" 2018-12-25 +2d,
+          annual "Chritmas play" 2018-12-18 +3d,
+          unemployed "term1 exam" 2018-12-06 - 2018-12-14
+}
+
+task lit_res "Literature Research" {
+  task synthesis "Digital circuit synthesis tools research" {
+    complete 70
+    duration 13d
+    journalentry 2018-11-02 "initial research" {
+      summary -8<-
+        YOSyS and ABC are promising open sourced synthesizers.
+        However, YoSys seems to contain ABC as its command line has the
+        keyword: 'abc'.
+      ->8-
+    }
+  }
+  task platforms "Synthesis platforms" {
+    duration 13d
+    complete 60
+  }
+}
+
+task initial "Initial tasks" {
+  allocate mike
+  task read_doc "Read POETS Docs" {
+    length 1w
+  }
+  task clock_tree "Trials with clock_tree" {
+    effort 1d
+    depends !read_doc
+  }
+  task num_clock_tree "Numbered clock_tree" {
+    effort 1d
+    depends !clock_tree
+  }
+  task state_clock_tree "Numbers propagate and transform in the tree" {
+    effort 5h
+    start 2018-11-30
+    depends !num_clock_tree
+  }
+}
+
+task discovery "Discovery tasks" {
+  task docker "Look for alternatives to Vagrant" {
+    start 2018-11-26
+    duration 2d
+  }
+  task christmas "Christmas study" {
+    start 2018-12-14
+    task toolchian "Try toolchains" {
+      duration 5d
+    }
+    task choose "Choose a suitably sized digital circuit" {
+      duration 1d
+    }
+  }
+}
+
+task basic "Proof of concept" {
+  start 2018-12-14
+  task design "Design message types" {
+    allocate mike
+    effort 2d
+  }
+  task netlist "Convert Verilog to POETS graph" {
+    allocate mike
+    effort 2d
+    depends discovery.christmas.choose
+  }
+  task tests "Test the POETS instance with datasets" {
+    allocate mike
+    effort 3d
+    depends !netlist
+  }
+}
+
+task reports "Reports" {
+  task inception_report "Inception report"{
+    end 2018-11-05
+    depends lit_res
+  }
+  task interim_report "Interim report" {
+    end 2019-01-28
+    depends initial, lit_res, basic,
+            discovery.christmas
+  }
+  task draft "Abstract and draft report" {
+    # 2019-06-03 16:00
+    start 2019-06-03
+  }
+  task final_report "Final Report" {
+    # 2019-06-19 23:30
+    end 2019-06-19
+  }
+}
+
+task milestones "Milestones" {
+  task meeting6 "6th meeting" {
+    start 2018-11-30
+    depends initial.num_clock_tree
+  }
+  task meeting7 "7th meeting" {
+    start 2018-12-05
+    depends initial.state_clock_tree
+  }
+  task basic "Manual digital circuit simulation" {
+    start 2018-12-25
+    depends initial, basic
+  }
+}
+
+textreport frame "" {
+  textreport index "overview" {
+    formats html
+    center '<[report id="overview"]>'
+  }
+}
+
+taskreport overview "" {
+  columns bsi { title 'WBS' },
+    name, start, end, duration, chart {width 1000}
+  #period ${projectstart} - %{${now} + 3w}
+  period ${projectstart} - 2019-01-29
+}

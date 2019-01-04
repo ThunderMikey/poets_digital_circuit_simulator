@@ -1,0 +1,8 @@
+FROM alpine:3.8
+RUN apk --no-cache add \
+  ruby \
+  ruby-rdoc
+RUN gem install taskjuggler
+ENV RUBYOPT="-W0"
+
+# vim:ft=dockerfile:
