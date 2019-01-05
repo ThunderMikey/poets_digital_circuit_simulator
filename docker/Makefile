@@ -8,12 +8,12 @@ gs: graph_schema.docker entrypoint.sh
 yosys_builder: yosys_builder.docker
 	docker build -f $< -t tmikey/yosys_builder .
 
-build_yosys:
+build_yosys: yosys_src
 	docker run --rm -it \
 		--user $(uid):$(uid) \
-		-v $(shell pwd)/yosys_src:/yosys_src \
+		-v $(shell pwd)/$<:/$< \
 		tmikey/yosys_builder \
-		sh
+		make -C /$< -j4
 
 yosys: yosys.docker
 	docker build -f $< -t tmikey/$@ .
