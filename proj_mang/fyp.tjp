@@ -83,6 +83,10 @@ task discovery "Discovery tasks" {
     task choose "Choose a suitably sized digital circuit" {
       duration 1d
     }
+    task read_yosys "Read yosys documentation" {
+      start 2018-12-28
+      duration 7d
+    }
   }
 }
 
@@ -106,13 +110,10 @@ task basic "Proof of concept" {
 
 task reports "Reports" {
   task inception_report "Inception report"{
-    end 2018-11-05
-    depends lit_res
+    start 2018-11-05
   }
   task interim_report "Interim report" {
-    end 2019-01-28
-    depends initial, lit_res, basic,
-            discovery.christmas
+    start 2019-01-28
   }
   task draft "Abstract and draft report" {
     # 2019-06-03 16:00
@@ -120,7 +121,7 @@ task reports "Reports" {
   }
   task final_report "Final Report" {
     # 2019-06-19 23:30
-    end 2019-06-19
+    start 2019-06-19
   }
 }
 
@@ -136,6 +137,10 @@ task milestones "Milestones" {
   task basic "Manual digital circuit simulation" {
     start 2018-12-25
     depends initial, basic
+  }
+  task yosys "Build a toolchain for combinatorial circuit simulation" {
+    start 2019-01-23
+    depends !basic
   }
 }
 
