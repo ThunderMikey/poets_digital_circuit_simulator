@@ -1,0 +1,12 @@
+read_verilog test_designs/combinatorial/c432.v
+# read_verilog -lib cell_libs/nand_only.v
+hierarchy -check
+# translate processes
+proc; opt
+# convert to gate logic
+techmap; opt
+# map logic to cmos cells
+# abc -liberty cell_libs/nand_only.lib
+# abc -g NAND,XOR,AND
+
+write_blif main.blif
