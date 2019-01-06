@@ -1,3 +1,6 @@
 [submodule "graph_schema"]
 	path = graph_schema
 	url = git@github.com:POETSII/graph_schema.git
+[submodule "yosys"]
+	path = yosys
+	url = https://github.com/YosysHQ/yosys.git
