@@ -1,20 +1,11 @@
-FROM ubuntu:18.04
-# support add-apt-repository
-#RUN apt-get update && \
-#  apt-get install -y software-properties-common \
-#  && rm -rf /var/lib/apt/lists/*
-#  # add Yosys ppa
-RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y --no-install-recommends \
+FROM alpine:3.8
+RUN apk --no-cache add \
     bash \
     binutils \
-    libffi-dev \
-    libreadline-dev \
-    tcl-dev \
-    make \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    g++ \
+    libffi \
+    readline \
+    tcl
 ADD yosys_src/yosys* /usr/local/bin/
 ADD yosys_src/share /usr/local/share/yosys/
 RUN strip -S /usr/local/bin/yosys \
