@@ -4,3 +4,6 @@
 [submodule "yosys"]
 	path = yosys
 	url = https://github.com/YosysHQ/yosys.git
+[submodule "FYP_Interim_Report"]
+	path = FYP_Interim_Report
+	url = git@github.com:ThunderMikey/FYP_Interim_Report.git
