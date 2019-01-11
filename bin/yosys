@@ -6,4 +6,4 @@ docker run --rm -it \
   -v $CD:/pdcs \
   -e LOCAL_USER_ID=`id -u $USER` \
   tmikey/yosys:latest \
-  yosys -s yosys_scripts/standard.ys $@ 
+  yosys $@ 
