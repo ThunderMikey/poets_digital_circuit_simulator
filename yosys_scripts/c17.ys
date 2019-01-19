@@ -11,6 +11,6 @@ abc -g NAND
 
 #write_blif main.blif
 #write_spice main.spice
-write_edif c17.edif
+write_edif netlist/c17.edif
 #write_intersynth main.intersynth
 #write_verilog main.v
