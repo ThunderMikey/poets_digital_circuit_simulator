@@ -1,8 +1,8 @@
 #!/bin/bash
 CD=`pwd`
-UID=`id -u`
+T_UID=${UID:-`id -u`}
 docker run --rm -it \
-  --user $UID:$UID \
+  --user $T_UID:$T_UID \
   -v $CD:/pdcs \
   -e LOCAL_USER_ID=`id -u $USER` \
   tmikey/yosys:latest \
