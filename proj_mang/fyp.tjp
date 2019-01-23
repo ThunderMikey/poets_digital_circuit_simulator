@@ -143,6 +143,13 @@ task seq_sim "Sequencial circuit simulation" {
   }
 }
 
+task misc "Miscellaneous" {
+  task auto_feed "Program to automatically feed in inputs and get outputs"{
+    start 2019-01-28
+    length 3m
+  }
+}
+
 task milestones "Milestones" {
   task basic "Manual digital circuit simulation" {
     start 2018-12-25
