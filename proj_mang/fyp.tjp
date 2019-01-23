@@ -29,7 +29,9 @@ resource mike "Mike Chen" {
          term3 2019-04-27 - 2019-06-30
   leaves holiday "Christmas" 2018-12-25 +2d,
           annual "Chritmas play" 2018-12-18 +3d,
-          unemployed "term1 exam" 2018-12-06 - 2018-12-14
+          unemployed "term1 exam" 2018-12-06 - 2018-12-14,
+          unemployed "term2 exam" 2019-03-15 - 2019-03-22,
+          unemployed "term3 exam" 2019-05-28 - 2019-06-07
 }
 
 task lit_res "Literature Research" {
@@ -125,15 +127,23 @@ task reports "Reports" {
   }
 }
 
+task seq_sim "Sequencial circuit simulation" {
+  depends milestones.yosys
+  allocate mike
+  task dff "Implement latch in POETS graph type" {
+    effort 2d
+  }
+  task graph_gen "Adapt gragh generation to sequential circuit" {
+    effort 2d
+    depends !dff
+  }
+  task tests "Test correctness" {
+    effort 3d
+    depends !graph_gen
+  }
+}
+
 task milestones "Milestones" {
-  task meeting6 "6th meeting" {
-    start 2018-11-30
-    depends initial.num_clock_tree
-  }
-  task meeting7 "7th meeting" {
-    start 2018-12-05
-    depends initial.state_clock_tree
-  }
   task basic "Manual digital circuit simulation" {
     start 2018-12-25
     depends initial, basic
@@ -141,6 +151,17 @@ task milestones "Milestones" {
   task yosys "Build a toolchain for combinatorial circuit simulation" {
     start 2019-01-23
     depends !basic
+  }
+  task sequential "Sequential circuit simulation" {
+    start 2019-04-22
+    depends !yosys, seq_sim
+  }
+  task extra "Runtime parameter changing" {
+    start 2019-05-20
+    depends !sequential
+  }
+  task evaluation "Performance evaluation"{
+    start 2019-05-25
   }
 }
 
@@ -155,5 +176,5 @@ taskreport overview "" {
   columns bsi { title 'WBS' },
     name, start, end, duration, chart {width 1000}
   #period ${projectstart} - %{${now} + 3w}
-  period ${projectstart} - 2019-01-29
+  period ${projectstart} - 2019-06-30
 }
