@@ -31,7 +31,8 @@ resource mike "Mike Chen" {
           annual "Chritmas play" 2018-12-18 +3d,
           unemployed "term1 exam" 2018-12-06 - 2018-12-14,
           unemployed "term2 exam" 2019-03-15 - 2019-03-22,
-          unemployed "term3 exam" 2019-05-28 - 2019-06-07
+          unemployed "term3 exam" 2019-05-28 - 2019-06-07,
+          unemployed "easter holiday" 2019-04-18 - 2019-04-27
 }
 
 task lit_res "Literature Research" {
@@ -130,6 +131,9 @@ task reports "Reports" {
 task seq_sim "Sequencial circuit simulation" {
   depends milestones.yosys
   allocate mike
+  task tech_map "Design technology map" {
+    effort 4d
+  }
   task dff "Implement latch in POETS graph type" {
     effort 2d
   }
@@ -150,6 +154,20 @@ task misc "Miscellaneous" {
   }
 }
 
+task extra "Extra things" {
+  depends seq_sim
+  allocate mike
+  task clustering "Explore performance impact with clustering" {
+    effort 1w
+  }
+  task parm_tuning "Explore runtime paramter tuning" {
+    effort 1w
+  }
+  task multi_copy "Explore parallel simulation of multiple circuits" {
+    effort 1w
+  }
+}
+
 task milestones "Milestones" {
   task basic "Manual digital circuit simulation" {
     start 2018-12-25
@@ -163,9 +181,9 @@ task milestones "Milestones" {
     start 2019-04-22
     depends !yosys, seq_sim
   }
-  task extra "Runtime parameter changing" {
+  task extra "Extra things" {
     start 2019-05-20
-    depends !sequential
+    depends extra
   }
   task evaluation "Performance evaluation"{
     start 2019-05-25
