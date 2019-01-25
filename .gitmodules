@@ -7,6 +7,3 @@
 [submodule "FYP_Interim_Report"]
 	path = FYP_Interim_Report
 	url = git@github.com:ThunderMikey/FYP_Interim_Report.git
-[submodule "proj_mang/TJ2PDF"]
-	path = proj_mang/TJ2PDF
-	url = git@github.com:ThunderMikey/TJ2PDF.git
