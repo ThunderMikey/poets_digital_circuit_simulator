@@ -1,0 +1,49 @@
+project poets "Digital Circuit Simulation on POETS" 2018-10-22 - 2019-06-30 {
+  #timezone "Europe/London"
+  # abbreviated month name %b
+  timeformat "%a %d-%b-%y"
+  numberformat "-" "" "," "." 1
+  workinghours sun - sat 10:00 - 18:00
+  scenario plan "Planned scenario" {
+    scenario actual "Actual scenario"
+  }
+}
+
+
+shift term1 "term 1 time" {
+  workinghours sun - sat 20:00 - 21:00
+}
+shift term2 "term 2 time" {
+  workinghours sun - sat 20:00 - 22:00
+}
+shift term3 "term 3 time" {
+  workinghours sun - sat 10:00 - 15:00
+}
+shift holiday "holiday schedule" {
+  workinghours sun - sat 10:00 - 17:00
+}
+
+resource mike "Mike Chen" {
+  email "yc12015@ic.ac.uk"
+  shifts term1 2018-10-01 - 2018-12-14,
+         holiday 2018-12-14 - 2019-01-05,
+         term2 2019-01-05 - 2019-03-22,
+         holiday 2019-03-22 - 2019-04-27,
+         term3 2019-04-27 - 2019-06-30
+  leaves holiday "Christmas" 2018-12-25 +2d,
+          annual "Chritmas play" 2018-12-18 +3d,
+          unemployed "term1 exam" 2018-12-06 - 2018-12-14,
+          unemployed "term2 exam" 2019-03-15 - 2019-03-22,
+          unemployed "term3 exam" 2019-05-28 - 2019-06-07,
+          unemployed "easter holiday" 2019-04-18 - 2019-04-27
+}
+include "tasks.tji"
+
+taskreport before_interim_report "before_interim" {
+  formats html
+  columns name, effort, chart {width 1000}
+  #period ${projectstart} - %{${now} + 3w}
+  period ${projectstart} - 2019-02-02
+  hidetask (plan.start > 2019-01-28)
+}
+
