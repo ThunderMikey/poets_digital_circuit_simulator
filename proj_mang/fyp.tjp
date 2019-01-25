@@ -35,160 +35,7 @@ resource mike "Mike Chen" {
           unemployed "easter holiday" 2019-04-18 - 2019-04-27
 }
 
-task lit_res "Literature Research" {
-  task synthesis "Digital circuit synthesis tools research" {
-    complete 70
-    duration 13d
-    journalentry 2018-11-02 "initial research" {
-      summary -8<-
-        YOSyS and ABC are promising open sourced synthesizers.
-        However, YoSys seems to contain ABC as its command line has the
-        keyword: 'abc'.
-      ->8-
-    }
-  }
-  task platforms "Synthesis platforms" {
-    duration 13d
-    complete 60
-  }
-}
-
-task initial "Initial tasks" {
-  allocate mike
-  task read_doc "Read POETS Docs" {
-    length 1w
-  }
-  task clock_tree "Trials with clock_tree" {
-    effort 1d
-    depends !read_doc
-  }
-  task num_clock_tree "Numbered clock_tree" {
-    effort 1d
-    depends !clock_tree
-  }
-  task state_clock_tree "Numbers propagate and transform in the tree" {
-    effort 5h
-    start 2018-11-30
-    depends !num_clock_tree
-  }
-}
-
-task discovery "Discovery tasks" {
-  task docker "Look for alternatives to Vagrant" {
-    start 2018-11-26
-    duration 2d
-  }
-  task christmas "Christmas study" {
-    start 2018-12-14
-    task toolchian "Try toolchains" {
-      duration 5d
-    }
-    task choose "Choose a suitably sized digital circuit" {
-      duration 1d
-    }
-    task read_yosys "Read yosys documentation" {
-      start 2018-12-28
-      duration 7d
-    }
-  }
-}
-
-task basic "Proof of concept" {
-  start 2018-12-14
-  task design "Design message types" {
-    allocate mike
-    effort 2d
-  }
-  task netlist "Convert Verilog to POETS graph" {
-    allocate mike
-    effort 2d
-    depends discovery.christmas.choose
-  }
-  task tests "Test the POETS instance with datasets" {
-    allocate mike
-    effort 3d
-    depends !netlist
-  }
-}
-
-task reports "Reports" {
-  task inception_report "Inception report"{
-    start 2018-11-05
-  }
-  task interim_report "Interim report" {
-    start 2019-01-28
-  }
-  task draft "Abstract and draft report" {
-    # 2019-06-03 16:00
-    start 2019-06-03
-  }
-  task final_report "Final Report" {
-    # 2019-06-19 23:30
-    start 2019-06-19
-  }
-}
-
-task seq_sim "Sequencial circuit simulation" {
-  depends milestones.yosys
-  allocate mike
-  task tech_map "Design technology map" {
-    effort 4d
-  }
-  task dff "Implement latch in POETS graph type" {
-    effort 2d
-  }
-  task graph_gen "Adapt gragh generation to sequential circuit" {
-    effort 2d
-    depends !dff
-  }
-  task tests "Test correctness" {
-    effort 3d
-    depends !graph_gen
-  }
-}
-
-task misc "Miscellaneous" {
-  task auto_feed "Program to automatically feed in inputs and get outputs"{
-    start 2019-01-28
-    length 3m
-  }
-}
-
-task extra "Extra things" {
-  depends seq_sim
-  allocate mike
-  task clustering "Explore performance impact with clustering" {
-    effort 1w
-  }
-  task parm_tuning "Explore runtime paramter tuning" {
-    effort 1w
-  }
-  task multi_copy "Explore parallel simulation of multiple circuits" {
-    effort 1w
-  }
-}
-
-task milestones "Milestones" {
-  task basic "Manual digital circuit simulation" {
-    start 2018-12-25
-    depends initial, basic
-  }
-  task yosys "Build a toolchain for combinatorial circuit simulation" {
-    start 2019-01-23
-    depends !basic
-  }
-  task sequential "Sequential circuit simulation" {
-    start 2019-04-22
-    depends !yosys, seq_sim
-  }
-  task extra "Extra things" {
-    start 2019-05-20
-    depends extra
-  }
-  task evaluation "Performance evaluation"{
-    start 2019-05-25
-  }
-}
+include "tasks.tji"
 
 textreport frame "" {
   textreport index "overview" {
@@ -202,4 +49,9 @@ taskreport overview "" {
     name, start, end, duration, chart {width 1000}
   #period ${projectstart} - %{${now} + 3w}
   period ${projectstart} - 2019-06-30
+}
+taskreport printout "Print" {
+  timeformat "%Y-%m-%d"
+  formats csv
+  columns id, name, duration, start, complete, precursors
 }
