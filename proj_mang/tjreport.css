@@ -427,6 +427,8 @@ p.tj_journal {
   position:absolute;
 }
 .nowline {
+  /* HIDE red line */
+  display: none;
   background-color:#EE0000;
   position:absolute;
 }
@@ -463,6 +465,7 @@ p.tj_journal {
   padding:0px;
 }
 .copyright {
+  /* HIDE copyright */
   display: none;
   font-size:9px;
   color:#101010;
