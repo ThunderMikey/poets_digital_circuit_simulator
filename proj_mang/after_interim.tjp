@@ -13,11 +13,12 @@ project poets "Digital Circuit Simulation on POETS" 2018-10-22 - 2019-06-30 {
 include "resource_mike.tji"
 include "tasks.tji"
 
-taskreport before_interim_report "before_interim" {
+taskreport after_interim_report "after_interim" {
   formats html
   columns name, effort, chart {width 1000}
   #period ${projectstart} - %{${now} + 3w}
-  period ${projectstart} - 2019-02-02
-  hidetask (plan.start > 2019-01-28)
+  period 2019-01-15 - %{${projectend} + 1w}
+  hidetask (actual.end < 2019-01-28)
+  scenarios actual
 }
 

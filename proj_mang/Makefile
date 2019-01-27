@@ -3,7 +3,7 @@ reports:
 
 u := $(shell id -u)
 p := $(shell pwd)
-reports/%.html: %.tjp tasks.tji | reports
+reports/%.html: %.tjp tasks.tji resource_mike.tji | reports
 	#tj3 fyp.tjp -o reports
 	docker run --rm --user $u:$u \
 		-v $p:/proj_mang \
