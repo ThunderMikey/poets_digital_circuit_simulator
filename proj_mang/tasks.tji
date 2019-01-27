@@ -1,5 +1,5 @@
 
-task lit_res "Literature Research" {
+task lit_res "Literature research" {
   task synthesis "Digital circuit synthesis tools research" {
     duration 13d
     journalentry 2018-11-02 "initial research" {
