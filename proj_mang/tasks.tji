@@ -75,7 +75,6 @@ task basic "Proof of concept" {
 
 
 task seq_sim "Sequencial circuit simulation" {
-  depends milestones.edif_xml
   allocate mike
   start 2019-01-29
   actual:start 2019-02-08
@@ -160,12 +159,14 @@ task edif_xml "Automatic convertion from Verilog to POETS graph" {
   task find_edif "Find a suitable output format" {
     effort 6h
   }
-  task edif_python "Read in netlist in Python" {
+  task edif_python "Read in EDIF netlist in Python" {
     effort 1d
+    actual:end 2019-02-03
   }
   task edif_to_xml "Output POETS graph" {
     effort 6h
     complete 70
+    depends !edif_python
   }
 }
 
