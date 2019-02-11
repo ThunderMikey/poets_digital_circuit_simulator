@@ -65,8 +65,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   zip \
   zlib1g-dev \
 && rm -rf /var/lib/apt/lists/*
+RUN pip3 install --upgrade pip setuptools
 RUN pip3 install pyamg \
-  svgwrite
+  svgwrite \
+  sexpdata
 WORKDIR /pdcs
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # vim:ft=dockerfile:
