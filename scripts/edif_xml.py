@@ -21,7 +21,7 @@ from common import Terminal
 argParser = argparse.ArgumentParser(description="EDIF to XML converter")
 argParser.add_argument('-i', '--input-file',
     dest='input_file',
-    default="netlist/c17.edif",
+    default="netlists/c17.edif",
     help="EDIF input file")
 argParser.add_argument('-o', '--output-file',
     dest='output_file',
