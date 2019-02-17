@@ -2,6 +2,7 @@ import json
 import sys
 sys.path.append('graph_schema/tools')
 from graph.core import DeviceInstance, GraphInstance, EdgeInstance
+from common import Terminal, Instance
 
 class Cell:
     def __init__(self, name, orignal_name):
@@ -17,11 +18,7 @@ class Cell:
     def add_instance(self, name, libRef, cellRef, viewRef):
         self.instances.update(
                 {
-                    name:{
-                        "libRef": libRef,
-                        "cellRef": cellRef,
-                        "viewRef": viewRef
-                        }
+                    name: Instance(libRef, cellRef, viewRef)
                     }
                 )
 
@@ -53,7 +50,9 @@ class Cell:
         graphType = graphTypes["circuit_gates"]
         inputTerminalGate = graphType.device_types["input_terminal"]
         outputTerminalGate = graphType.device_types["output_terminal"]
-        exitNode = graphType.device_types["exit_node"]
+        # TODO: do not currently have exit node
+        # exit is controlled by global `max_ticks`
+        #exitNode = graphType.device_types["exit_node"]
         graphInstDict = {}
         def get_gate_type(libRef, cellRef):
             cell = externalLibs[libRef][cellRef]
@@ -75,24 +74,54 @@ class Cell:
         def get_output_ports(cell):
             return [ p for (p, dirc) in cell.ports.items() if dirc == "OUTPUT" ]
         
-        def get_net_src(cell, nets):
-            for net in nets:
-                instRef = net["instanceRef"]
-                inst = cell.instances[instRef]
+        def get_net_terminals(cell, direction: str, nets, eLibs, graphInstDict):
+            """
+                return terminal device(s) and its port
+                    port must match port definition in graph schema
+                INPUT for a Cell is drain, but it is src for a port
+            """
+            srcTerms = []
+            for term in nets:
+                if term.instanceRef:
+                    inst = cell.instances[term.instanceRef]
+                    # the base gate
+                    gate = eLibs[inst.libRef][inst.cellRef]
+                    if gate.ports[term.portRef] != direction:
+                        srcTerms.append(
+                            (graphInstDict[term.instanceRef],
+                            term.portRef)
+                        )
+                else:
+                    if cell.ports[term.portRef] == direction:
+                        # input terminal has only one output pin
+                        # output terminal has only one receive pin
+                        pinName = "out" if direction == "INPUT" else "receive"
+                        srcTerms.append(
+                            (graphInstDict[term.portRef],
+                            pinName)
+                        )
+            if direction == "INPUT":
+                assert(len(srcTerms) == 1,
+                    "There can only be one source terminal in the net", 
+                    srcTerms)
+                return srcTerms[0]
+            else:
+                return srcTerms
+
 
             
 
 
         # construct device instance
-        for (gid, gate) in self.instances.items():
-            gType = get_gate_type(gate["libRef"], gate["cellRef"])
+        for (instId, inst) in self.instances.items():
+            gType = get_gate_type(inst.libRef, inst.cellRef)
             node = DeviceInstance(
                 parent=res,
-                id="{0}_{1}".format(gType, gid),
+                id="{0}_{1}".format(gType, instId),
                 device_type=find_gt_gate(gType),
                 )
             res.add_device_instance(node)
-            graphInstDict[gid] = node
+            graphInstDict[instId] = node
         
         # construct input terminals
         inTerms = get_input_ports(self)
@@ -113,30 +142,33 @@ class Cell:
             gid = outPin
             node = DeviceInstance(
                 parent=res,
-                id="{0}_{1}_{2}".format(self.name, "it", gid),
+                id="{0}_{1}_{2}".format(self.name, "ot", gid),
                 device_type=outputTerminalGate,
             )
             res.add_device_instance(node)
             graphInstDict[gid] = node
 
         # construct edge instances
-        for (netName, nets) in self.nets.items():
-            print(netName, nets)
-            gType = get_gate_type(gate["libRef"], gate["cellRef"])
-            print(gate)
-            (srcDev, srcPin) = get_net_src()
-            drains = get_net_drains()
-            for idx, inPin in enumerate(gate):
-                print(inPin)
-                srcDev = graphInstDict[inPin]
-                srcPin = "out"
+        for (_, edges) in self.nets.items():
+            # find the only source
+            (srcDev, srcPin) = get_net_terminals(
+                self,
+                "INPUT", edges,
+                externalLibs, graphInstDict)
+            # find drains
+            drains = get_net_terminals(
+                self,
+                "OUTPUT", edges,
+                externalLibs, graphInstDict)
+            
+            for (dstDev, dstPin) in drains:
                 # except KeyError:
                 #     srcDev = None
                 #     srcPin = None
                 edgeInst = EdgeInstance(
                     parent=res,
-                    dst_device=graphInstDict[gid],
-                    dst_pin="in{}".format(idx),
+                    dst_device=dstDev,
+                    dst_pin=dstPin,
                     src_device=srcDev,
                     src_pin=srcPin)
                 res.add_edge_instance(edgeInst)

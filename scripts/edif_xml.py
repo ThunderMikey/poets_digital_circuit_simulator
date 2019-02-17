@@ -10,9 +10,27 @@ sys.path.append('graph_schema/tools')
 from graph.core import DeviceInstance, GraphInstance, EdgeInstance
 from graph.load_xml import load_graph_types_and_instances
 from graph.save_xml_stream import save_graph
+from collections import namedtuple
+from common import Terminal
 
 
-with open("netlist/c17.edif", 'r') as edif:
+###########################
+# arguments
+###########################
+
+argParser = argparse.ArgumentParser(description="EDIF to XML converter")
+argParser.add_argument('-i', '--input-file',
+    dest='input_file',
+    default="netlist/c17.edif",
+    help="EDIF input file")
+argParser.add_argument('-o', '--output-file',
+    dest='output_file',
+    default="STDOUT",
+    help="POETS graph XML file")
+
+args = argParser.parse_args()
+
+with open(args.input_file, 'r') as edif:
     e = sexpdata.load(edif)
 
 #s = sexpdata.car(e)
@@ -143,11 +161,10 @@ def convert_cells(rawCells: list):
             netTerminals = get_sexp_list(netConns[1:], "portRef")
 
             terms = [
-                {
-                    "portRef": get_sexp_name(t),
-                    "instanceRef": get_sexp_name(get_sexp_list_content(t))
-                        if len(t)>2 else None
-                }
+                Terminal(
+                    get_sexp_name(t),
+                    get_sexp_name(get_sexp_list_content(t)) if len(t)>2 else None
+                )
                 for t in netTerminals
             ]
             thisCell.add_net(
@@ -166,6 +183,7 @@ def convert_cells(rawCells: list):
 def process_cells(libName: str, content: list, checkCellAvailability=True):
     """
         external libs need to be checked for availability
+        return dict(libRef) of dict(cellRef) of Cells
     """
     rawCells = get_sexp_list(content, "cell")
     # verify availability
@@ -246,4 +264,10 @@ for d in designs_sexp:
             graphTypes=graphTypes,
             externalLibs=extLibs)
 
+if args.output_file == "STDOUT":
+    save_dst = sys.stdout
+else:
+    save_dst=args.output_file
+
+save_graph(res, save_dst)
 #print(extLibs)

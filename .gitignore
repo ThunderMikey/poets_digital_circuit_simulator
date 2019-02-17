@@ -1,2 +1,4 @@
 *.swp
 netlist/
+graphs/
+__pycache__

@@ -72,21 +72,21 @@
 				]]>
 				</ReadyToSend>
 
-				<InputPin name="in0" messageTypeId="wire">
+				<InputPin name="A" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in0 = message->logic;
 					]]>
 					</OnReceive>
 				</InputPin>
 
-				<InputPin name="in1" messageTypeId="wire">
+				<InputPin name="B" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in1 = message->logic;
 					]]>
 					</OnReceive>
 				</InputPin>
 
-				<OutputPin name="out" messageTypeId="wire">
+				<OutputPin name="Y" messageTypeId="wire">
 					<OnSend><![CDATA[
 						message->logic = nand2_gate(
 									deviceState->logic_in0,
