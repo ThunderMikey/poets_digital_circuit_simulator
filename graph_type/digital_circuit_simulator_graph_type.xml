@@ -68,7 +68,7 @@
 				</InputPin>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_nand_out;
+					*readyToSend = OUTPUT_FLAG_nand_Y;
 				]]>
 				</ReadyToSend>
 
@@ -124,7 +124,7 @@
 				</State>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_gnd_out;
+					*readyToSend = OUTPUT_FLAG_vcc_out;
 				]]>
 				</ReadyToSend>
 
