@@ -50,9 +50,8 @@ class Cell:
         graphType = graphTypes["circuit_gates"]
         inputTerminalGate = graphType.device_types["input_terminal"]
         outputTerminalGate = graphType.device_types["output_terminal"]
-        # TODO: do not currently have exit node
         # exit is controlled by global `max_ticks`
-        #exitNode = graphType.device_types["exit_node"]
+        exitNode = graphType.device_types["exit_node"]
         graphInstDict = {}
         def get_gate_type(libRef, cellRef):
             cell = externalLibs[libRef][cellRef]
@@ -165,6 +164,24 @@ class Cell:
                     src_device=srcDev,
                     src_pin=srcPin)
                 res.add_edge_instance(edgeInst)
+        # add exit_node
+        exitNode_inst = DeviceInstance(
+                parent=res,
+                id="exit_node",
+                device_type=exitNode)
+        res.add_device_instance(exitNode_inst)
+        exitNodeInput = DeviceInstance(
+                parent=res,
+                id="exit_node_input",
+                device_type=inputTerminalGate)
+        res.add_device_instance(exitNodeInput)
+        edgeInst = EdgeInstance(
+                parent=res,
+                dst_device=exitNode_inst,
+                dst_pin="done",
+                src_device=exitNodeInput,
+                src_pin="out")
+        res.add_edge_instance(edgeInst)
 
     def __str__(self):
         return json.dumps(

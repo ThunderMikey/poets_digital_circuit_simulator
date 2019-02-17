@@ -248,7 +248,9 @@
 				<InputPin name="done" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->no_ticks++;
-						if(deviceState->no_ticks == deviceProperties->max_ticks){
+            handler_log(2, "tick number: %u",
+              deviceState->no_ticks);
+            if(deviceState->no_ticks >= deviceProperties->max_ticks){
 							handler_exit(0);
 						}
 					]]>
