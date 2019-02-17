@@ -2,7 +2,7 @@ import json
 import sys
 sys.path.append('graph_schema/tools')
 from graph.core import DeviceInstance, GraphInstance, EdgeInstance
-from common import Terminal, Instance
+from common import Terminal, Instance, gateMappings
 
 class Cell:
     def __init__(self, name, orignal_name):
@@ -59,13 +59,6 @@ class Cell:
             return cell.orignal_name
 
         def find_gt_gate(gateType, device_types=graphType.device_types):
-            gateMappings = {
-                "AND": 0,
-                "OR": 1,
-                "GND": "gnd",
-                "VCC": "vcc",
-                "$_NAND_": "nand"
-                }
             return device_types[gateMappings[gateType]]
         
         def get_input_ports(cell):

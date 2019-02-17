@@ -11,7 +11,7 @@ from graph.core import DeviceInstance, GraphInstance, EdgeInstance
 from graph.load_xml import load_graph_types_and_instances
 from graph.save_xml_stream import save_graph
 from collections import namedtuple
-from common import Terminal
+from common import Terminal, sanitise, gateMappings
 
 
 ###########################
@@ -38,13 +38,7 @@ with open(args.input_file, 'r') as edif:
 #print(s.__dict__)
 #print(inspect.getmembers(s, predicate=inspect.ismethod))
 
-AVAILABLE_CELLS = [
-        "$_NAND_",
-        "$_NOT_",
-        "VCC",
-        "GND"
-        ]
-
+AVAILABLE_CELLS = list(gateMappings.keys())
 
 def get_op(lst):
     return lst[0].value()
@@ -63,7 +57,7 @@ def get_sexp_name(item, orig=False):
         return nameField.value()
     elif type(nameField) is list:
         if is_op(nameField, "rename"):
-            return nameField[2] if orig else nameField[1].value()
+            return sanitise(nameField[2]) if orig else nameField[1].value()
         else:
             raise(KeyError("The list does not start with rename"))
     else:
