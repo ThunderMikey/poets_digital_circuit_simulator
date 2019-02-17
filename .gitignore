@@ -2,3 +2,5 @@
 netlists/
 graphs/
 __pycache__
+bin/
+
