@@ -124,7 +124,7 @@ class Cell:
                 parent=res,
                 id="{0}_{1}_{2}".format(self.name, "it", gid),
                 device_type=inputTerminalGate,
-                properties={"flip_interval": 200}
+                properties={"flip_interval": 20}
             )
             res.add_device_instance(node)
             graphInstDict[gid] = node

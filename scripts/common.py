@@ -4,11 +4,10 @@ Terminal = namedtuple('Terminal', 'portRef, instanceRef')
 
 Instance = namedtuple('Instance', 'libRef, cellRef, viewRef')
 gateMappings = {
-    "AND": 0,
-    "OR": 1,
     "GND": "gnd",
     "VCC": "vcc",
-    "__NAND_": "nand"
+    "__NAND_": "nand",
+    "__NOT_": "not"
 }
 
 def sanitise(string):

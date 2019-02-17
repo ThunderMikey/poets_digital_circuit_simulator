@@ -96,6 +96,41 @@
 				</OutputPin>
 			</DeviceType>
 
+			<DeviceType id="not">
+				<Properties>
+					<Scalar type="uint8_t" name="output_logic" default="0" />
+				</Properties>
+				<State>
+					<Scalar type="uint32_t" name="no_ticks" />
+					<Scalar type="uint8_t" name="logic_in0" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+		  			<OnReceive><![CDATA[
+						deviceState->logic_in0 = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
+				<ReadyToSend><![CDATA[
+					*readyToSend = OUTPUT_FLAG_not_Y;
+				]]>
+				</ReadyToSend>
+
+				<InputPin name="A" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->logic_in0 = message->logic;
+					]]>
+					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="Y" messageTypeId="wire">
+					<OnSend><![CDATA[
+            message->logic = (uint8_t)(!deviceState->logic_in0);
+					]]>
+					</OnSend>
+				</OutputPin>
+			</DeviceType>
+
 			<DeviceType id="gnd">
 				<Properties>
 				</Properties>
@@ -104,11 +139,11 @@
 				</State>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_gnd_out;
+					*readyToSend = OUTPUT_FLAG_gnd_G;
 				]]>
 				</ReadyToSend>
 
-				<OutputPin name="out" messageTypeId="wire">
+				<OutputPin name="G" messageTypeId="wire">
 					<OnSend><![CDATA[
 						message->logic = 0;
 					]]>
@@ -124,11 +159,11 @@
 				</State>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_vcc_out;
+					*readyToSend = OUTPUT_FLAG_vcc_P;
 				]]>
 				</ReadyToSend>
 
-				<OutputPin name="out" messageTypeId="wire">
+				<OutputPin name="P" messageTypeId="wire">
 					<OnSend><![CDATA[
 						message->logic = 1;
 					]]>

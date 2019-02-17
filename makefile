@@ -28,6 +28,9 @@ bin:
 sim_results:
 	mkdir -p $@
 
+providers:
+	mkdir -p $@
+
 netlists/%.edif: yosys_scripts/%.ys
 	scripts/yosys -s $<
 
@@ -43,23 +46,27 @@ $(GS)/bin/epoch_sim:
 bin/epoch_sim: $(GS)/bin/epoch_sim | bin
 	ln -s ../$< $@
 
-sim_results/%.log: graphs/%.xml bin/epoch_sim | sim_results
-	bin/epoch_sim  --log-level 0 --max-steps 100 \
+sim_results/%.log: graphs/%.xml bin/epoch_sim \
+	providers/%.graph.so | sim_results
+	bin/epoch_sim  --log-level 2 --max-steps 100 \
 		$< \
-		> $@
+		> $@ 2>&1
 
 #demos/digital_circuit_simulator/digital_circuit_$1.xml
-providers/%.graph.so: providers/%.graph.cpp
+.PRECIOUS: providers/%.graph.so
+providers/%.graph.so: providers/%.graph.cpp \
+	providers/%.graph.hpp
 	g++ $(CPPFLAGS) -Wno-unused-but-set-variable $(SO_CPPFLAGS) $< \
 		-o $@ $(LDFLAGS) $(LDLIBS)
 
-providers/%.graph.cpp providers/%.graph.hpp: graphs/%.xml $(JING)
-	mkdir -p providers
+providers/%.graph.hpp: graphs/%.xml | providers
+	$(PYTHON) $(GS)/tools/render_graph_as_cpp.py --header < $< \
+		> providers/$*.graph.hpp
+
+providers/%.graph.cpp: graphs/%.xml $(JING) | providers
 	java -jar $(JING) -c $(GS)/master/virtual-graph-schema-v2.1.rnc $<
 	$(PYTHON) $(GS)/tools/render_graph_as_cpp.py $< \
 		providers/$*.graph.cpp
-	$(PYTHON) $(GS)/tools/render_graph_as_cpp.py --header < $< \
-		> providers/$*.graph.hpp
 
 $(JING): $(GS)/external/jing-20081028.zip
 	cd $(<D) && unzip -o $(<F)
