@@ -1,0 +1,31 @@
+digraph toolchain {
+//  rankdir=LR;
+// box is product
+  node [shape=ellipse];
+// circle is tool
+  Verilog [shape=box];
+  Verilog -> Yosys;
+  Yosys -> edif;
+  edif [shape=box];
+  edif -> edif_to_xml;
+
+  graph_type [shape=box];
+  graph_type -> edif_to_xml;
+  edif_to_xml -> graph_instance;
+  graph_instance [shape=box];
+
+  // two paths
+  graph_instance -> epoch_sim;
+  epoch_sim -> sim_logs;
+  sim_logs [label="Simulation logs", shape=box];
+
+  graph_instance -> pts_xmlc;
+  pts_xmlc [label="POETS compiler"];
+  pts_xmlc -> pts_exe;
+  pts_exe [label="POETS executable", shape=box];
+  pts_exe -> pts_serve;
+  pts_serve [label="POETS interlink"];
+  pts_serve -> sim_logs;
+}
+
+// vim: ft=dot:
