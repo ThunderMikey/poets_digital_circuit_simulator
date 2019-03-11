@@ -19,19 +19,10 @@ export PYTHONPATH = $(GS)/tools
 # prefix
 P:=./run_docker.sh
 
-graphs:
+graphs bin sim_results providers netlists:
 	mkdir -p $@
 
-bin:
-	mkdir -p $@
-
-sim_results:
-	mkdir -p $@
-
-providers:
-	mkdir -p $@
-
-netlists/%.edif: yosys_scripts/%.ys
+netlists/%.edif: yosys_scripts/%.ys | netlists
 	scripts/yosys -s $<
 
 graphs/%.xml: netlists/%.edif \
