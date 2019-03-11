@@ -1,0 +1,14 @@
+digraph io_oracle_fsm {
+  node [shape=circle];
+  it_feed [label="send to input terminals"];
+  ot_receive [label="receive from output terminals"];
+  print [label="print io values in groups"];
+
+  it_feed -> it_feed [label="it_count < no_inputs"];
+  it_feed -> ot_receive [label="it_count >= no_inputs"];
+  ot_receive -> ot_receive [label="ot_count < no_outputs"];
+  ot_receive -> print [label="ot_count >= no_outputs"];
+  print -> it_feed;
+}
+
+// vim: ft=dot:
