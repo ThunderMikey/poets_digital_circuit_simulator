@@ -1,4 +1,5 @@
 digraph toolchain {
+  bgcolor=transparent;
   // legends
   subgraph cluster_legends {
     label="legend";
