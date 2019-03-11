@@ -80,3 +80,7 @@ graphs/%.checked: graphs/%.xml $(JING) \
 	java -jar $(JING) -c $(GS)/master/virtual-graph-schema-v2.2.rnc $<
 	java -jar $(JING) $(GS)/derived/virtual-graph-schema-v2.2.xsd $<
 	touch $@
+
+.PHONY: clean
+clean:
+	-rm -r providers sim_results netlists graphs
