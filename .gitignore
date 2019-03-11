@@ -1,9 +1,9 @@
 *.swp
-netlists/
-graphs/
+/netlists
+/graphs
 __pycache__
 bin/
-sim_results/
-providers/
-.vscode/
+/sim_results
+/providers
+/.vscode
 
