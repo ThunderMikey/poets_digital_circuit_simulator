@@ -50,9 +50,13 @@ class Cell:
         graphType = graphTypes["circuit_gates"]
         inputTerminalGate = graphType.device_types["input_terminal"]
         outputTerminalGate = graphType.device_types["output_terminal"]
+        ioOracle = graphType.device_types["io_oracle"]
         # exit is controlled by global `max_ticks`
         exitNode = graphType.device_types["exit_node"]
         graphInstDict = {}
+        # io terminals
+        inTermInsts = []
+        outTermInsts = []
         def get_gate_type(libRef, cellRef):
             cell = externalLibs[libRef][cellRef]
             return cell.orignal_name
@@ -117,28 +121,35 @@ class Cell:
         
         # construct input terminals
         inTerms = get_input_ports(self)
+        inTermTid = 0
         for inPin in inTerms:
             gid = inPin
             node = DeviceInstance(
                 parent=res,
                 id="{0}_{1}_{2}".format(self.name, "it", gid),
                 device_type=inputTerminalGate,
-                properties={"flip_interval": 20}
+                properties={"tid": inTermTid}
             )
+            inTermTid += 1
             res.add_device_instance(node)
             graphInstDict[gid] = node
+            inTermInsts.append(node)
         
         # construct output terminals
         outTerms = get_output_ports(self)
+        outTermTid = 0
         for outPin in outTerms:
             gid = outPin
             node = DeviceInstance(
                 parent=res,
                 id="{0}_{1}_{2}".format(self.name, "ot", gid),
                 device_type=outputTerminalGate,
+                properties={"tid": outTermTid}
             )
+            outTermTid += 1
             res.add_device_instance(node)
             graphInstDict[gid] = node
+            outTermInsts.append(node)
 
         # construct edge instances
         for (_, edges) in self.nets.items():
@@ -164,6 +175,34 @@ class Cell:
                     src_device=srcDev,
                     src_pin=srcPin)
                 res.add_edge_instance(edgeInst)
+        # construct io_oracle
+        ioOracleInst = DeviceInstance(
+            parent=res,
+            id="{0}_io_oracle".format(self.name),
+            device_type=ioOracle,
+            properties={"no_inputs": len(inTermInsts),
+                "no_outputs": len(outTermInsts),
+                "combinations": pow(2, len(inTermInsts))}
+        )
+        res.add_device_instance(ioOracleInst)
+        for iTerm in inTermInsts:
+            edgeInst = EdgeInstance(
+                parent=res,
+                dst_device=iTerm,
+                dst_pin="io_oracle_receive",
+                src_device=ioOracleInst,
+                src_pin="it_feed"
+            )
+            res.add_edge_instance(edgeInst)
+        for oTerm in outTermInsts:
+            edgeInst = EdgeInstance(
+                parent=res,
+                dst_device=ioOracleInst,
+                dst_pin="ot_receive",
+                src_device=oTerm,
+                src_pin="out"
+            )
+            res.add_edge_instance(edgeInst)
         # add exit_node
         exitNode_inst = DeviceInstance(
                 parent=res,

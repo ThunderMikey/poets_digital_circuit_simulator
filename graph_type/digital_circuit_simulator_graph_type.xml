@@ -4,17 +4,18 @@
 		<Documentation>
 		This is a library of gates for digital circuit simulations.
 		gate_type:
-			0: and
-			1: or
-			2: xor
+			nand, or, gnd, vcc
 		</Documentation>
 
 		<MetaData>
-		"native_dimension":2
 		</MetaData>
 
 		<Properties>
 			<Scalar name="max_ticks" type="uint32_t" default="100"/>
+			<!-- when complete: when all inputs are received,
+			when false: send whenever a message a received from any input,
+				and set `completed` to false -->
+			<Scalar name="only_send_when_complete" type="uint8_t" default="1"/>
 		</Properties>
 		<SharedCode><![CDATA[
 			uint8_t and2_gate(uint8_t in0, uint8_t in1){
@@ -45,36 +46,166 @@
 				</Documentation>
 				<Message>
 					<Scalar name="logic" type="uint8_t"/>
+					<!-- signal if both all inputs are received, therefore
+					output is valid. Can propergate if debugging purposes.
+					Will be potentially useful for debugging combinatorial circuits
+					 -->
+					 <!-- REVISIT: pack `logic` and `completed` to reduce message
+					 size -->
+					<Scalar name="completed" type="uint8_t"/>
 				</Message>
             </MessageType>
+			<MessageType id="io_oracle_imsg">
+				<Documentation>
+					Message send to input terminals and receive from output terminals.
+				</Documentation>
+				<Message>
+					<Scalar name="logic" type="uint8_t"/>
+					<!-- input terminal id -->
+					<Scalar name="tid" type="uint32_t"/>
+				</Message>
+			</MessageType>
+			<MessageType id="io_oracle_pmsg">
+				<Documentation>
+					Message for simulation results printing.
+				</Documentation>
+				<Message>
+					<Scalar name="feedin" type="uint32_t"/>
+					<Scalar name="result" type="uint32_t"/>
+				</Message>
+			</MessageType>
 		</MessageTypes>
 
 		<DeviceTypes>
+			<DeviceType id="io_oracle">
+			<!-- oracle sends message to all input terminals each cycle with
+			only one valid message to a single input terminal,
+			indentified by terminal id -->
+				<Properties>
+					<Scalar type="uint32_t" name="no_inputs" />
+					<Scalar type="uint32_t" name="no_outputs" />
+					<!-- 2^no_inputs -->
+					<Scalar type="uint32_t" name="combinations" />
+				</Properties>
+				<State>
+					<Scalar type="uint32_t" name="t_count" />
+					<Scalar type="uint32_t" name="iteration" />
+					<Scalar type="uint32_t" name="result" />
+					<!--
+					O: send to input terminals
+					1: wait for output terminals
+					2: print io values in group
+					-->
+					<Scalar type="uint8_t" name="status" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+				<OnReceive>
+				<![CDATA[
+					deviceState->t_count=0;
+					deviceState->iteration=0;
+					deviceState->result=0;
+				]]>
+				</OnReceive>
+				</InputPin>
+				<ReadyToSend><![CDATA[
+					if(deviceState->status == 0){
+						*readyToSend = OUTPUT_FLAG_io_oracle_it_feed;
+					}
+					else if(deviceState->status == 1){
+						*readyToSend = 0;
+					}
+					else if(deviceState->status == 2){
+						*readyToSend = OUTPUT_FLAG_io_oracle_print;
+					}
+					else{
+						*readyToSend = 0;
+					}
+				]]>
+				</ReadyToSend>
+				<OutputPin name="it_feed" messageTypeId="io_oracle_imsg">
+					<OnSend><![CDATA[
+					// masked with iteration
+					if(deviceState->t_count < deviceProperties->no_inputs){
+						// take bitwise value and shift back down to bit 0
+						message->logic = (deviceState->iteration & (1<<(deviceState->t_count)))>>deviceState->t_count;
+						message->tid = deviceState->t_count;
+						deviceState->t_count++;
+					}
+					else{
+						// change state to ot_receive
+						deviceState->status = 1;
+						deviceState->t_count = 0;
+					}
+					]]>
+					</OnSend>
+				</OutputPin>
+				<InputPin name="ot_receive" messageTypeId="io_oracle_imsg">
+					<OnReceive><![CDATA[
+					// masked with iteration
+					if(deviceState->t_count<deviceProperties->no_outputs){
+						deviceState->result |= (message->logic & 1) << message->tid;
+						deviceState->t_count++;
+					}
+					else{
+						// change state to print
+						deviceState->status = 2;
+						deviceState->t_count = 0;
+					}
+					]]>
+					</OnReceive>
+				</InputPin>
+				<OutputPin name="print" messageTypeId="io_oracle_pmsg">
+					<OnSend><![CDATA[
+						message->feedin = deviceState->iteration;
+						message->result = deviceState->result;
+						handler_log(1, "feedin: %u", deviceState->iteration);
+						handler_log(1, "result: %u", deviceState->result);
+						deviceState->iteration++;
+						deviceState->result = 0;
+						// change state to it_feed
+						deviceState->status = 0;
+						// iteration start with 0
+						if(deviceState->iteration >= deviceProperties->combinations){
+							handler_exit(0);
+						}
+					]]>
+					</OnSend>
+				</OutputPin>
+			</DeviceType>
 			<DeviceType id="nand">
 				<Properties>
 					<Scalar type="uint8_t" name="output_logic" default="0" />
+					<Scalar type="uint8_t" name="no_inputs" default="2" />
 				</Properties>
 				<State>
 					<Scalar type="uint32_t" name="no_ticks" />
 					<Scalar type="uint8_t" name="logic_in0" />
 					<Scalar type="uint8_t" name="logic_in1" />
+					<Scalar type="uint8_t" name="i_count" />
 				</State>
 				<InputPin name="__init__" messageTypeId="__init__">
 		  			<OnReceive><![CDATA[
 						deviceState->logic_in0 = 0;
 						deviceState->logic_in1 = 0;
+						deviceState->i_count = 0;
 					]]>
 					</OnReceive>
 				</InputPin>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_nand_Y;
+					if(deviceState->i_count < deviceProperties->no_inputs){
+						*readyToSend = 0;
+					}
+					else{
+						*readyToSend = OUTPUT_FLAG_nand_Y;
+					}
 				]]>
 				</ReadyToSend>
 
 				<InputPin name="A" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in0 = message->logic;
+						deviceState->i_count++;
 					]]>
 					</OnReceive>
 				</InputPin>
@@ -82,6 +213,7 @@
 				<InputPin name="B" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in1 = message->logic;
+						deviceState->i_count++;
 					]]>
 					</OnReceive>
 				</InputPin>
@@ -91,6 +223,7 @@
 						message->logic = nand2_gate(
 									deviceState->logic_in0,
 									deviceState->logic_in1);
+						deviceState->i_count = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
@@ -173,56 +306,92 @@
 
 			<DeviceType id="input_terminal">
 				<Properties>
-					<Scalar type="uint8_t" name="flip_interval" default="3"/>
+					<!-- unique input terminal id -->
+					<Scalar type="uint8_t" name="tid"/>
 				</Properties>
 				<State>
 					<Scalar type="uint8_t" name="current_iteration" />
 					<Scalar type="uint8_t" name="current_logic" />
+					<Scalar type="uint8_t" name="do_send" />
 				</State>
 				<InputPin name="__init__" messageTypeId="__init__">
 					<OnReceive><![CDATA[
 						deviceState->current_iteration = 0;
 						deviceState->current_logic = 0;
+						deviceState->do_send = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<InputPin name="io_oracle_receive" messageTypeId="io_oracle_imsg">
+					<OnReceive><![CDATA[
+						if(message->tid == deviceProperties->tid){
+							deviceState->current_logic = message->logic;
+							deviceState->do_send = 1;
+						}
 					]]>
 					</OnReceive>
 				</InputPin>
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_input_terminal_out;
+					if(deviceState->do_send == 1){
+						*readyToSend = OUTPUT_FLAG_input_terminal_out;
+					}
 				]]>
 				</ReadyToSend>
 				<OutputPin name="out" messageTypeId="wire">
 					<OnSend><![CDATA[
 						message->logic = deviceState->current_logic;
-						if (deviceState->current_iteration ==
-							deviceProperties->flip_interval){
-							deviceState->current_logic =
-								!deviceState->current_logic;
-							deviceState->current_iteration = 0;
-						}
-						else{
-							deviceState->current_iteration++;
-						}
-						handler_log(2, "value: %u",
-							message->logic);
+						deviceState->current_iteration++;
+						deviceState->do_send = 0;
+						handler_log(2, "it: %u, value: %u, iteration: %u",
+							deviceProperties->tid,
+							deviceState->current_logic,
+							deviceState->current_iteration
+							);
 					]]>
 					</OnSend>
 				</OutputPin>
 			</DeviceType>
 
 			<DeviceType id="output_terminal">
+				<Properties>
+					<!-- unique input terminal id -->
+					<Scalar type="uint8_t" name="tid"/>
+				</Properties>
 				<State>
+					<Scalar type="uint8_t" name="do_send"/>
+					<Scalar type="uint8_t" name="current_logic"/>
 				</State>
 				<ReadyToSend><![CDATA[
-					*readyToSend=0;
+					if(deviceState->do_send == 1){
+						*readyToSend=OUTPUT_FLAG_output_terminal_out;
+					}
 				]]>
 				</ReadyToSend>
-				<InputPin name="receive" messageTypeId="wire">
+				<InputPin name="__init__" messageTypeId="__init__">
 					<OnReceive><![CDATA[
-						handler_log(2, "value: %u",
-							message->logic);
+						deviceState->do_send = 0;
+						deviceState->current_logic = 0;
 					]]>
 					</OnReceive>
 				</InputPin>
+				<InputPin name="receive" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->current_logic = message->logic;
+						deviceState->do_send = 1;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<OutputPin name="out" messageTypeId="io_oracle_imsg">
+					<OnSend><![CDATA[
+						message->logic = deviceState->current_logic;
+						message->tid = deviceProperties->tid;
+						deviceState->do_send = 0;
+						handler_log(2, "ot: %u, value: %u",
+							deviceProperties->tid,
+							deviceState->current_logic);
+					]]>
+					</OnSend>
+				</OutputPin>
 			</DeviceType>
 
 			<DeviceType id="exit_node">
