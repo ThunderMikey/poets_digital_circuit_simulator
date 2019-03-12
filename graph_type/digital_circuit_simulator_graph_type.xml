@@ -131,7 +131,7 @@
 						message->tid = deviceState->t_count;
 						deviceState->t_count++;
 					}
-					else{
+					if(deviceState->t_count >= deviceProperties->no_inputs){
 						// change state to ot_receive
 						deviceState->status = 1;
 						deviceState->t_count = 0;
@@ -146,7 +146,7 @@
 						deviceState->result |= (message->logic & 1) << message->tid;
 						deviceState->t_count++;
 					}
-					else{
+					if(deviceState->t_count >= deviceProperties->no_outputs){
 						// change state to print
 						deviceState->status = 2;
 						deviceState->t_count = 0;
@@ -178,26 +178,27 @@
 					<Scalar type="uint8_t" name="no_inputs" default="2" />
 				</Properties>
 				<State>
-					<Scalar type="uint32_t" name="no_ticks" />
 					<Scalar type="uint8_t" name="logic_in0" />
 					<Scalar type="uint8_t" name="logic_in1" />
-					<Scalar type="uint8_t" name="i_count" />
+					<Scalar type="uint8_t" name="A_recv" />
+					<Scalar type="uint8_t" name="B_recv" />
 				</State>
 				<InputPin name="__init__" messageTypeId="__init__">
 		  			<OnReceive><![CDATA[
 						deviceState->logic_in0 = 0;
 						deviceState->logic_in1 = 0;
-						deviceState->i_count = 0;
+						deviceState->A_recv = 0;
+						deviceState->B_recv = 0;
 					]]>
 					</OnReceive>
 				</InputPin>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					if(deviceState->i_count < deviceProperties->no_inputs){
-						*readyToSend = 0;
+					if(deviceState->A_recv && deviceState->B_recv){
+						*readyToSend = OUTPUT_FLAG_nand_Y;
 					}
 					else{
-						*readyToSend = OUTPUT_FLAG_nand_Y;
+						*readyToSend = 0;
 					}
 				]]>
 				</ReadyToSend>
@@ -205,7 +206,7 @@
 				<InputPin name="A" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in0 = message->logic;
-						deviceState->i_count++;
+						deviceState->A_recv = 1;
 					]]>
 					</OnReceive>
 				</InputPin>
@@ -213,7 +214,7 @@
 				<InputPin name="B" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in1 = message->logic;
-						deviceState->i_count++;
+						deviceState->B_recv = 1;
 					]]>
 					</OnReceive>
 				</InputPin>
@@ -223,7 +224,8 @@
 						message->logic = nand2_gate(
 									deviceState->logic_in0,
 									deviceState->logic_in1);
-						deviceState->i_count = 0;
+						deviceState->A_recv = 0;
+						deviceState->B_recv = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
@@ -236,22 +238,30 @@
 				<State>
 					<Scalar type="uint32_t" name="no_ticks" />
 					<Scalar type="uint8_t" name="logic_in0" />
+					<Scalar type="uint8_t" name="do_send" />
 				</State>
 				<InputPin name="__init__" messageTypeId="__init__">
 		  			<OnReceive><![CDATA[
 						deviceState->logic_in0 = 0;
+						deviceState->do_send = 0;
 					]]>
 					</OnReceive>
 				</InputPin>
 				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
 				<ReadyToSend><![CDATA[
-					*readyToSend = OUTPUT_FLAG_not_Y;
+					if(deviceState->do_send == 1){
+						*readyToSend = OUTPUT_FLAG_not_Y;
+					}
+					else{
+						*readyToSend = 0;
+					}
 				]]>
 				</ReadyToSend>
 
 				<InputPin name="A" messageTypeId="wire">
 					<OnReceive><![CDATA[
 						deviceState->logic_in0 = message->logic;
+						deviceState->do_send = 1;
 					]]>
 					</OnReceive>
 				</InputPin>
@@ -259,6 +269,7 @@
 				<OutputPin name="Y" messageTypeId="wire">
 					<OnSend><![CDATA[
             message->logic = (uint8_t)(!deviceState->logic_in0);
+						deviceState->do_send = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
@@ -335,18 +346,21 @@
 					if(deviceState->do_send == 1){
 						*readyToSend = OUTPUT_FLAG_input_terminal_out;
 					}
+					else{
+						*readyToSend = 0;
+					}
 				]]>
 				</ReadyToSend>
 				<OutputPin name="out" messageTypeId="wire">
 					<OnSend><![CDATA[
 						message->logic = deviceState->current_logic;
-						deviceState->current_iteration++;
-						deviceState->do_send = 0;
 						handler_log(2, "it: %u, value: %u, iteration: %u",
 							deviceProperties->tid,
 							deviceState->current_logic,
 							deviceState->current_iteration
 							);
+						deviceState->current_iteration++;
+						deviceState->do_send = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
@@ -364,6 +378,9 @@
 				<ReadyToSend><![CDATA[
 					if(deviceState->do_send == 1){
 						*readyToSend=OUTPUT_FLAG_output_terminal_out;
+					}
+					else{
+						*readyToSend = 0;
 					}
 				]]>
 				</ReadyToSend>
@@ -385,10 +402,10 @@
 					<OnSend><![CDATA[
 						message->logic = deviceState->current_logic;
 						message->tid = deviceProperties->tid;
-						deviceState->do_send = 0;
 						handler_log(2, "ot: %u, value: %u",
 							deviceProperties->tid,
 							deviceState->current_logic);
+						deviceState->do_send = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
