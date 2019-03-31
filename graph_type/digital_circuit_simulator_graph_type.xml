@@ -161,13 +161,13 @@
 						handler_log(1, "feedin: %u", deviceState->iteration);
 						handler_log(1, "result: %u", deviceState->result);
 						deviceState->iteration++;
-						deviceState->result = 0;
-						// change state to it_feed
-						deviceState->status = 0;
 						// iteration start with 0
 						if(deviceState->iteration >= deviceProperties->combinations){
 							handler_exit(0);
 						}
+						deviceState->result = 0;
+						// change state to it_feed
+						deviceState->status = 0;
 					]]>
 					</OnSend>
 				</OutputPin>
