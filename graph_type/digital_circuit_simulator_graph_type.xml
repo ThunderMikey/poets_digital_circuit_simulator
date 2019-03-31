@@ -60,9 +60,9 @@
 					Message send to input terminals and receive from output terminals.
 				</Documentation>
 				<Message>
-					<Scalar name="logic" type="uint8_t"/>
 					<!-- input terminal id -->
 					<Scalar name="tid" type="uint32_t"/>
+					<Scalar name="logic" type="uint8_t"/>
 				</Message>
 			</MessageType>
 			<MessageType id="io_oracle_pmsg">
