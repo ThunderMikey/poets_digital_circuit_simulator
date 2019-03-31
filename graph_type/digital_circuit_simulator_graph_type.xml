@@ -355,9 +355,9 @@
 					<OnSend><![CDATA[
 						message->logic = deviceState->current_logic;
 						handler_log(2, "it: %u, value: %u, iteration: %u",
-							deviceProperties->tid,
-							deviceState->current_logic,
-							deviceState->current_iteration
+							(uint32_t) deviceProperties->tid,
+							(uint32_t) deviceState->current_logic,
+							(uint32_t) deviceState->current_iteration
 							);
 						deviceState->current_iteration++;
 						deviceState->do_send = 0;
@@ -403,8 +403,8 @@
 						message->logic = deviceState->current_logic;
 						message->tid = deviceProperties->tid;
 						handler_log(2, "ot: %u, value: %u",
-							deviceProperties->tid,
-							deviceState->current_logic);
+							(uint32_t) deviceProperties->tid,
+							(uint32_t) deviceState->current_logic);
 						deviceState->do_send = 0;
 					]]>
 					</OnSend>
