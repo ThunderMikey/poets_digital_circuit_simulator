@@ -44,7 +44,7 @@ bin/epoch_sim: $(GS)/bin/epoch_sim | bin
 
 sim_results/%.log: graphs/%.xml bin/epoch_sim \
 	providers/%.graph.so | sim_results
-	$P bin/epoch_sim  --log-level 2 --max-steps 200 \
+	$P bin/epoch_sim  --log-level 2 \
 		$< \
 		> $@ 2>&1
 

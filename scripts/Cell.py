@@ -204,23 +204,23 @@ class Cell:
             )
             res.add_edge_instance(edgeInst)
         # add exit_node
-        exitNode_inst = DeviceInstance(
-                parent=res,
-                id="exit_node",
-                device_type=exitNode)
-        res.add_device_instance(exitNode_inst)
-        exitNodeInput = DeviceInstance(
-                parent=res,
-                id="exit_node_input",
-                device_type=inputTerminalGate)
-        res.add_device_instance(exitNodeInput)
-        edgeInst = EdgeInstance(
-                parent=res,
-                dst_device=exitNode_inst,
-                dst_pin="done",
-                src_device=exitNodeInput,
-                src_pin="out")
-        res.add_edge_instance(edgeInst)
+       # exitNode_inst = DeviceInstance(
+       #         parent=res,
+       #         id="exit_node",
+       #         device_type=exitNode)
+       # res.add_device_instance(exitNode_inst)
+       # exitNodeInput = DeviceInstance(
+       #         parent=res,
+       #         id="exit_node_input",
+       #         device_type=inputTerminalGate)
+       # res.add_device_instance(exitNodeInput)
+       # edgeInst = EdgeInstance(
+       #         parent=res,
+       #         dst_device=exitNode_inst,
+       #         dst_pin="done",
+       #         src_device=exitNodeInput,
+       #         src_pin="out")
+       # res.add_edge_instance(edgeInst)
 
     def __str__(self):
         return json.dumps(
