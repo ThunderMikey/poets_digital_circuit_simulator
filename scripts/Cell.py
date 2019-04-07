@@ -182,7 +182,7 @@ class Cell:
             device_type=ioOracle,
             properties={"no_inputs": len(inTermInsts),
                 "no_outputs": len(outTermInsts),
-                "combinations": pow(2, len(inTermInsts))}
+                "combinations": pow(2, len(inTermInsts))-1 }
         )
         res.add_device_instance(ioOracleInst)
         for iTerm in inTermInsts:

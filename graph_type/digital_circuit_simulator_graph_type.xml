@@ -161,8 +161,8 @@
 						handler_log(1, "feedin: %u", deviceState->iteration);
 						handler_log(1, "result: %u", deviceState->result);
 						deviceState->iteration++;
-						// iteration start with 0
-						if(deviceState->iteration >= deviceProperties->combinations){
+						// iteration start with 0, combinations start with 0
+						if(deviceState->iteration > deviceProperties->combinations){
 							handler_exit(0);
 						}
 						deviceState->result = 0;
