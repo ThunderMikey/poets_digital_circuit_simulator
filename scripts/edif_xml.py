@@ -31,7 +31,11 @@ argParser.add_argument('-o', '--output-file',
 args = argParser.parse_args()
 
 with open(args.input_file, 'r') as edif:
-    e = sexpdata.load(edif)
+    # true=None, prevent t being intepreted as True
+    e = sexpdata.load(
+            edif,
+            true=None
+        )
 
 #s = sexpdata.car(e)
 #print(type(s))
