@@ -65,7 +65,10 @@ def get_sexp_name(item, orig=False):
         else:
             raise(KeyError("The list does not start with rename"))
     else:
-        raise(KeyError("Not a Symbol or a list"))
+        raise(KeyError("{}, {} Not a Symbol or a list".format(
+            nameField,
+            type(nameField)
+            )))
 
 def get_sexp_list(inList, op):
     """
