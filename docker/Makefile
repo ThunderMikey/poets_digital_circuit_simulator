@@ -15,5 +15,8 @@ build_yosys: yosys_src
 		tmikey/yosys_builder \
 		make -C /$< -j4
 
+doc_maker: doc_maker.docker
+	docker build -f $< -t tmikey/$@ .
+
 yosys: yosys.docker
 	docker build -f $< -t tmikey/$@ .

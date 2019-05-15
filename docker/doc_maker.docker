@@ -1,0 +1,8 @@
+FROM alpine:3.9
+RUN apk --no-cache add \
+  texlive-full
+RUN apk --no-cache add \
+  wkhtmltopdf \
+  ghostscript
+WORKDIR /docs
+# vim:ft=dockerfile:
