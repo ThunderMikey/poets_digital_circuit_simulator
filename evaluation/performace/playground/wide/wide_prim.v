@@ -1,4 +1,4 @@
-parameter SIZE=32;
+parameter SIZE=16;
 module wide_prim(
   input [SIZE*2-1:0] in,
   output [SIZE*2-1:0] out
