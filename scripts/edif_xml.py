@@ -63,7 +63,7 @@ def get_sexp_name(item, orig=False):
         if is_op(nameField, "rename"):
             return sanitise(nameField[2]) if orig else nameField[1].value()
         else:
-            raise(KeyError("The list does not start with rename"))
+            raise(KeyError("The list does not start with rename: {}".format(nameField)))
     else:
         raise(KeyError("{}, {} Not a Symbol or a list".format(
             nameField,
