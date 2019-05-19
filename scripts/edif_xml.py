@@ -62,6 +62,18 @@ def get_sexp_name(item, orig=False):
     elif type(nameField) is list:
         if is_op(nameField, "rename"):
             return sanitise(nameField[2]) if orig else nameField[1].value()
+        elif is_op(nameField, "array"):
+            baseName = nameField[1].value()
+            try:
+                arraySize = int(nameField[2])
+            except ValueError:
+                raise(ValueError("array size: {} is not an integer".format(nameField[2])))
+            # "in[0]" style, since it is impossible to have this port name in Verilog
+            names = [ baseName+'['+str(n)+']' for n in range(arraySize) ]
+            # special case, return array, need to check type on return
+            return names
+        elif is_op(nameField, "member"):
+            return nameField[1].value()+'['+str(nameField[2])+']'
         else:
             raise(KeyError("The list does not start with rename: {}".format(nameField)))
     else:
@@ -131,13 +143,17 @@ def convert_cells(rawCells: list):
             nets =[]
         # add ports, from interface
         for port in ports:
+            # a port may be an array
             portName = get_sexp_name(port)
             portContent = get_sexp_list_contents(port)
             d = get_sexp_unique_op(portContent, "direction")
             portDirection = get_sexp_name(d)
-            thisCell.add_port(
-                name=portName,
-                direction=portDirection)
+            pNames = portName if isinstance(portName, list) else [portName]
+            print(pNames)
+            for pName in pNames:
+                thisCell.add_port(
+                    name=pName,
+                    direction=portDirection)
         # add contents if any
         for inst in instances:
             instName = get_sexp_name(inst)
