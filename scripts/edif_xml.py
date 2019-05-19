@@ -11,7 +11,7 @@ from graph.core import DeviceInstance, GraphInstance, EdgeInstance
 from graph.load_xml import load_graph_types_and_instances
 from graph.save_xml_stream import save_graph
 from collections import namedtuple
-from common import Terminal, sanitise, gateMappings
+from common import Terminal, sanitise, gateMappings, flatten_array
 
 
 ###########################
@@ -69,11 +69,11 @@ def get_sexp_name(item, orig=False):
             except ValueError:
                 raise(ValueError("array size: {} is not an integer".format(nameField[2])))
             # "in[0]" style, since it is impossible to have this port name in Verilog
-            names = [ baseName+'['+str(n)+']' for n in range(arraySize) ]
+            names = [ flatten_array(baseName,n) for n in range(arraySize) ]
             # special case, return array, need to check type on return
             return names
         elif is_op(nameField, "member"):
-            return nameField[1].value()+'['+str(nameField[2])+']'
+            return flatten_array(nameField[1].value(), nameField[2])
         else:
             raise(KeyError("The list does not start with rename: {}".format(nameField)))
     else:

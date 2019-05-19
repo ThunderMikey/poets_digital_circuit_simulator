@@ -17,3 +17,9 @@ def sanitise(string):
     """
     return string.replace('$', '_')
 
+def flatten_array(baseName, idx):
+    """
+        flatten array into form "in__1"
+    """
+    return baseName+"__"+str(idx)
+
