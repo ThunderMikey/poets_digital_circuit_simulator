@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Vlong_prim.h"
 
-#define ITERATION 16
+#define ITERATION 256
 
 int main(){
   Vlong_prim* top = new Vlong_prim;
