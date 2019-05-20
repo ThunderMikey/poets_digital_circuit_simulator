@@ -149,7 +149,6 @@ def convert_cells(rawCells: list):
             d = get_sexp_unique_op(portContent, "direction")
             portDirection = get_sexp_name(d)
             pNames = portName if isinstance(portName, list) else [portName]
-            print(pNames)
             for pName in pNames:
                 thisCell.add_port(
                     name=pName,
