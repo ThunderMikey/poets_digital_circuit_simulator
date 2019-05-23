@@ -1,8 +1,8 @@
 #!/bin/bash
 
 TEMPLATE=./template/template.v
-MAX_DEPTH=1
-MAX_WIDTH=16
+MAX_WIDTH=$1
+MAX_DEPTH=$2
 
 for ((d=1; d<=${MAX_DEPTH}; d++)); do
   for ((w=1; w<=${MAX_WIDTH}; w++)); do
