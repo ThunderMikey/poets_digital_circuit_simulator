@@ -1,0 +1,24 @@
+digraph io_oracle {
+  i0; i1; i2; i3;
+  o0; o1; o2; o3;
+  oracle;
+  // placement nodes
+  node[shape=none, width=0, height=0, label=""];
+  p0 -> p1 -> p2 -> p3 -> oracle [style=invis];
+  subgraph cluster_circuit {
+    style=dashed;
+    label="circuit";
+    edge[style=invis];
+    {rank="same"; i0 -> p0 -> o0;}
+    {rank="same"; i1 -> p1 -> o1;}
+    {rank="same"; i2 -> p2 -> o2;}
+    {rank="same"; i3 -> p3 -> o3;}
+  }
+  
+  edge[constraint=false];
+  oracle -> i0, i1, i2, i3;
+
+  o0, o1, o2, o3 -> oracle;
+
+}
+// vim: ft=dot:
