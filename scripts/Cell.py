@@ -3,12 +3,14 @@ import sys
 sys.path.append('graph_schema/tools')
 from graph.core import DeviceInstance, GraphInstance, EdgeInstance
 from common import Terminal, Instance, gateMappings
+from collections import OrderedDict
 
 class Cell:
     def __init__(self, name, orignal_name):
         self.name = name
         self.orignal_name = orignal_name
-        self.ports = {}
+        # use ordered dictionary to keep port order
+        self.ports = OrderedDict()
         self.instances = {}
         self.nets = {}
 

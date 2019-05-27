@@ -43,6 +43,8 @@ with open(args.input_file, 'r') as edif:
 #print(inspect.getmembers(s, predicate=inspect.ismethod))
 
 AVAILABLE_CELLS = list(gateMappings.keys())
+# dictionary for arrays in EDIF
+arrays = {}
 
 def get_op(lst):
     return lst[0].value()
@@ -50,8 +52,11 @@ def get_op(lst):
 def is_op(lst, op):
     return lst[0] == sexpdata.Symbol(op)
 
+def convert_edif_member_to_idx(baseName, idx, arrays=arrays):
+    arraySize = arrays[baseName]
+    return abs(idx+1-arraySize)
 
-def get_sexp_name(item, orig=False):
+def get_sexp_name(item, orig=False, arrays=arrays):
     """
         orig: original name. (rename id00001 "$_NAND_")
             True returns second field
@@ -68,12 +73,19 @@ def get_sexp_name(item, orig=False):
                 arraySize = int(nameField[2])
             except ValueError:
                 raise(ValueError("array size: {} is not an integer".format(nameField[2])))
+            # update global variable
+            arrays[baseName] = arraySize
             # "in[0]" style, since it is impossible to have this port name in Verilog
+            # big-endian representation
             names = [ flatten_array(baseName,n) for n in range(arraySize) ]
             # special case, return array, need to check type on return
             return names
         elif is_op(nameField, "member"):
-            return flatten_array(nameField[1].value(), nameField[2])
+            # convert big endian addressing to little endian
+            baseName = nameField[1].value()
+            idx = nameField[2]
+            arrayIdx = convert_edif_member_to_idx(baseName, idx, arrays)
+            return flatten_array(baseName, arrayIdx)
         else:
             raise(KeyError("The list does not start with rename: {}".format(nameField)))
     else:
