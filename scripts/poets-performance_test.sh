@@ -34,6 +34,6 @@ for xml in ${PTS_XMLS}; do
   /usr/bin/time -f "%e, %U, %S" -o $PTS_T_LOG pts-serve --headless 1 >> $PTS_LOG 2>&1
   # append times
   awk -F "," '/appWallClockTime/{printf $2", "}' measure.csv >> $TIME_LOG
-  popd /dev/null
+  popd > /dev/null
   cat $PTS_T_LOG >> $TIME_LOG
 done
