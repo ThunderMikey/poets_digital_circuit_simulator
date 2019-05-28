@@ -84,13 +84,15 @@
 				<Properties>
 					<Scalar type="uint32_t" name="no_inputs" />
 					<Scalar type="uint32_t" name="no_outputs" />
-					<!-- 2^no_inputs -->
+					<!-- 2^no_inputs -1 -->
 					<Scalar type="uint32_t" name="combinations" />
+					<Scalar type="uint32_t" name="full_ot_mask" />
 				</Properties>
 				<State>
 					<Scalar type="uint32_t" name="t_count" />
 					<Scalar type="uint32_t" name="iteration" />
 					<Scalar type="uint32_t" name="result" />
+					<Scalar type="uint32_t" name="ot_mask" />
 					<!--
 					O: send to input terminals
 					1: wait for output terminals
@@ -104,6 +106,8 @@
 					deviceState->t_count=0;
 					deviceState->iteration=0;
 					deviceState->result=0;
+          deviceState->ot_mask=0;
+          deviceState->status=0;
 				]]>
 				</OnReceive>
 				</InputPin>
@@ -125,13 +129,13 @@
 				<OutputPin name="it_feed" messageTypeId="io_oracle_imsg">
 					<OnSend><![CDATA[
 					// masked with iteration
-					if(deviceState->t_count < deviceProperties->no_inputs){
-						// take bitwise value and shift back down to bit 0
-						message->logic = (deviceState->iteration & (1<<(deviceState->t_count)))>>deviceState->t_count;
-						message->tid = deviceState->t_count;
-						deviceState->t_count++;
-					}
-					if(deviceState->t_count >= deviceProperties->no_inputs){
+          // take bitwise value and shift back down to bit 0
+          message->logic = (deviceState->iteration & (1<<(deviceState->t_count)))>>deviceState->t_count;
+          message->tid = deviceState->t_count;
+          deviceState->t_count++;
+          if(deviceState->t_count >= deviceProperties->no_inputs){
+            // there can only be execution once
+            assert(deviceState->t_count == deviceProperties->no_inputs);
 						// change state to ot_receive
 						deviceState->status = 1;
 						deviceState->t_count = 0;
@@ -141,16 +145,20 @@
 				</OutputPin>
 				<InputPin name="ot_receive" messageTypeId="io_oracle_imsg">
 					<OnReceive><![CDATA[
-					// masked with iteration
-					if(deviceState->t_count<deviceProperties->no_outputs){
-						deviceState->result |= (message->logic & 1) << message->tid;
-						deviceState->t_count++;
-					}
-					if(deviceState->t_count >= deviceProperties->no_outputs){
-						// change state to print
-						deviceState->status = 2;
-						deviceState->t_count = 0;
-					}
+          // msgs are allowed to be received while it_feed is sending
+          if(deviceState->status == 0 || deviceState->status == 1){
+            // masked with iteration
+            deviceState->result |= (message->logic & 1) << message->tid;
+            // not use t_count, as duplicated msgs break the state machine
+            // if msg received, mask with 1<<tid
+            deviceState->ot_mask |= 1<<message->tid;
+            if(deviceState->ot_mask == deviceProperties->full_ot_mask){
+              // change state to print
+              deviceState->status = 2;
+              // reset ot_mask
+              deviceState->ot_mask = 0;
+            }
+          }
 					]]>
 					</OnReceive>
 				</InputPin>
