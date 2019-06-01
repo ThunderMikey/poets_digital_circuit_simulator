@@ -166,8 +166,9 @@
 					<OnSend><![CDATA[
 						message->feedin = deviceState->iteration;
 						message->result = deviceState->result;
-						handler_log(1, "feedin: %u", deviceState->iteration);
-						handler_log(1, "result: %u", deviceState->result);
+            handler_log(1, "feedin: %u, result: %u",
+              deviceState->iteration,
+              deviceState->result);
 						deviceState->iteration++;
 						// iteration start with 0, combinations start with 0
 						if(deviceState->iteration > deviceProperties->combinations){
