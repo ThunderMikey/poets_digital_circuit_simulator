@@ -2,7 +2,7 @@
 
 VERILOG_HOME=evaluation/performace
 YOSYS_TEMPLATE=yosys_scripts/perf_template.ys
-MAX_WIDTH=16
+MAX_WIDTH=10
 MAX_DEPTH=1
 
 # generate Verilogs
