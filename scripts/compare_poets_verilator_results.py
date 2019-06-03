@@ -63,8 +63,8 @@ def compare(poetsResultFile, verilatorResultFile):
         # all good
         pass
     else:
-        print(poetsResults)
-        print(verilatorResults)
+        print(set(poetsResults.items())^
+                set(verilatorResults.items()))
         raise(RuntimeError("Results does not match!"))
 
 if __name__ == "__main__":
