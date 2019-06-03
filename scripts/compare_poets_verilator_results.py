@@ -10,14 +10,15 @@ class RejectingDict(dict):
     def __setitem__(self, k, v):
         try:
             self.__getitem__(k)
+            print(self)
             raise ValueError("Key: {} is already present".format(k))
         except KeyError:
             return super(RejectingDict, self).__setitem__(k, v)
 
-poetsResults = RejectingDict()
-verilatorResults = RejectingDict()
-
 def compare(poetsResultFile, verilatorResultFile):
+
+    poetsResults = RejectingDict()
+    verilatorResults = RejectingDict()
 
     poetsResultMatcher = re.compile('io_oracle:print : feedin: (?P<feedin>\d+), result: (?P<result>\d+)')
     verilatorResultMatcher = re.compile('input: (?P<feedin>\d+), output: (?P<result>\d+)')
