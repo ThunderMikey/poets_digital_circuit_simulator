@@ -82,21 +82,6 @@
          transform="scale(0.8) translate(12.5,0)" />
     </marker>
     <marker
-       inkscape:isstock="true"
-       style="overflow:visible"
-       id="marker9290"
-       refX="0.0"
-       refY="0.0"
-       orient="auto"
-       inkscape:stockid="Arrow1Lstart"
-       inkscape:collect="always">
-      <path
-         transform="scale(0.8) translate(12.5,0)"
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         id="path9288" />
-    </marker>
-    <marker
        inkscape:stockid="Arrow1Lstart"
        orient="auto"
        refY="0.0"
@@ -239,10 +224,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.75378788"
-     inkscape:cx="408"
-     inkscape:cy="528"
+     inkscape:cx="419.87579"
+     inkscape:cy="492.79635"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="g9933"
      showgrid="true"
      units="in"
      objecttolerance="10000"
@@ -273,7 +258,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -295,14 +280,15 @@
   <g
      inkscape:groupmode="layer"
      id="layer4"
-     inkscape:label="terminal region">
+     inkscape:label="terminal region"
+     sodipodi:insensitive="true">
     <rect
        y="31.750004"
        x="146.05"
        height="139.7"
        width="25.4"
        id="rect8662"
-       style="opacity:1;vector-effect:none;fill:#800080;fill-opacity:0.21568628;stroke:#ffffff;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+       style="opacity:1;vector-effect:none;fill:#800080;fill-opacity:0.21568627;stroke:#ffffff;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <flowRoot
        transform="matrix(0.24258182,0,0,0.23204086,91.383157,4.9014121)"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none"
@@ -317,7 +303,7 @@
            width="116.00001"
            id="rect8583" /></flowRegion><flowPara
          id="flowPara8587">output terminals</flowPara></flowRoot>    <rect
-       style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:0.21568628;stroke:#ffffff;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;vector-effect:none;fill:#00ffff;fill-opacity:0.21568627;stroke:#ffffff;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect8660"
        width="25.4"
        height="139.7"
@@ -336,29 +322,25 @@
            x="220"
            y="120"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.33333397px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle" /></flowRegion><flowPara
-         id="flowPara8581">input terminals</flowPara></flowRoot>    <g
-       style="display:inline"
-       id="g10056">
-      <flowRoot
-         transform="matrix(0.26458333,0,0,0.26458333,-12.636181,11.934171)"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-         id="flowRoot9935"
-         xml:space="preserve"><flowRegion
-           id="flowRegion9937"><rect
-             y="912"
-             x="144"
-             height="68.261322"
-             width="166.43216"
-             id="rect9939" /></flowRegion><flowPara
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
-           id="flowPara9941">input feeder</flowPara></flowRoot>      <path
-         inkscape:original-d="m 63.499999,260.35 c 4.233598,-2.7e-4 8.466931,-2.7e-4 12.7,0 2.116799,-6.34987 4.233598,-12.70027 6.35,-19.05"
-         inkscape:path-effect="#path-effect10037"
-         inkscape:connector-curvature="0"
-         id="path10035"
-         d="m 63.499999,260.35 c 4.233598,0 8.466931,0 11.641786,-3.17496 3.174855,-3.17496 5.291655,-9.52536 7.408214,-15.87504"
-         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    </g>
+         id="flowPara8581">input terminals</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot9935"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,-12.636181,11.934171)"><flowRegion
+         id="flowRegion9937"><rect
+           id="rect9939"
+           width="166.43216"
+           height="68.261322"
+           x="144"
+           y="912" /></flowRegion><flowPara
+         id="flowPara9941"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start">input feeder</flowPara></flowRoot>    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.58999992, 1.58999992;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 63.499999,260.35 c 4.233598,0 8.466931,0 11.641786,-3.17496 3.174855,-3.17496 5.291655,-9.52536 7.408214,-15.87504"
+       id="path10035"
+       inkscape:connector-curvature="0"
+       inkscape:path-effect="#path-effect10037"
+       inkscape:original-d="m 63.499999,260.35 c 4.233598,-2.7e-4 8.466931,-2.7e-4 12.7,0 2.116799,-6.34987 4.233598,-12.70027 6.35,-19.05" />
     <flowRoot
        transform="matrix(0.26458333,0,0,0.26458333,114.07663,11.99799)"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -372,7 +354,7 @@
            id="rect10064" /></flowRegion><flowPara
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
          id="flowPara10068">output collector</flowPara></flowRoot>    <path
-       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:0.26458332;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.5874999, 1.5874999;stroke-dashoffset:0;stroke-opacity:1"
        d="m 152.4,260.35 c -4.23307,0 -8.4664,0 -11.64163,-3.17528 -3.17522,-3.17528 -5.29176,-9.52488 -7.40837,-15.87472"
        id="path10081"
        inkscape:connector-curvature="0"
@@ -413,15 +395,7 @@
        id="use9838"
        d="m 107.95,222.25 c -35.98307,0 -71.966403,0 -89.958201,-26.45866 C 0,169.33268 0,116.4164 8.4667565,89.9582 16.933513,63.499999 33.866931,63.499999 50.799999,63.499999"
        style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-mid:url(#marker9366)"
-       transform="matrix(-1,0,0,1,215.9,0)" />
-    <path
-       inkscape:original-d="m 107.95,222.25 c -31.749736,-2.7e-4 -63.499736,-2.7e-4 -95.25,0 2.64e-4,-40.21727 2.64e-4,-80.4336 0,-120.65 12.700181,-2.7e-4 25.400264,-2.7e-4 38.099999,0"
-       inkscape:path-effect="#path-effect9720"
-       inkscape:connector-curvature="0"
-       id="use9840"
-       d="m 107.95,222.25 c -31.749736,0 -63.499736,0 -79.374868,-20.10864 C 12.7,182.03273 12.7,141.8164 19.050091,121.7082 25.400181,101.6 38.100264,101.6 50.799999,101.6"
-       style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-mid:url(#marker9290);marker-end:url(#marker6533)"
-       transform="matrix(-1,0,0,1,215.9,0)" />
+       transform="matrix(-1,0,0,0.87999999,215.9,26.670001)" />
     <path
        inkscape:original-d="m 107.95,222.25 c -27.516403,-2.7e-4 -55.033069,-2.7e-4 -82.55,0 2.64e-4,-27.5172 2.64e-4,-55.0336 0,-82.55 8.466849,-2.7e-4 16.933597,-2.7e-4 25.399999,0"
        inkscape:path-effect="#path-effect9724"
@@ -429,14 +403,13 @@
        id="use9842"
        d="m 107.95,222.25 c -27.516403,0 -55.033069,0 -68.791534,-13.7586 C 25.4,194.7328 25.4,167.2164 29.633425,153.4582 33.866849,139.7 42.333597,139.7 50.799999,139.7"
        style="fill:none;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-mid:url(#Arrow1Lstart)"
-       transform="matrix(-1,0,0,1,215.9,0)" />
+       transform="matrix(-1,0,0,1.2307692,215.9,-51.288462)" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="circuit"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <use
        id="use8956"
        transform="matrix(1.43,0,0,1.8000001,41.473437,39.687497)"
@@ -471,26 +444,17 @@
        x="0"
        xlink:href="#Buffer"
        style="fill:none;stroke:#000000;stroke-width:2"
-       transform="matrix(1.43,0,0,1.8000001,136.72344,39.687498)"
+       transform="matrix(1.43,0,0,1.8000001,136.72344,58.737498)"
        id="use8978" />
     <use
        id="use8980"
-       transform="matrix(1.43,0,0,1.8000001,136.72344,115.8875)"
+       transform="matrix(1.43,0,0,1.8000001,136.72344,96.837498)"
        style="fill:none;stroke:#000000;stroke-width:2"
        xlink:href="#Buffer"
        x="0"
        y="0"
        width="100%"
        height="100%" />
-    <use
-       height="100%"
-       width="100%"
-       y="0"
-       x="0"
-       xlink:href="#Buffer"
-       style="fill:none;stroke:#000000;stroke-width:2"
-       transform="matrix(1.43,0,0,1.8000001,136.72344,77.787498)"
-       id="use8982" />
     <g
        id="g9179">
       <g
@@ -514,7 +478,7 @@
              id="tspan9164"
              x="89.843269"
              y="224.8383"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111126px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">i/o oracle</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111126px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">I/O oracle</tspan></text>
       </g>
       <flowRoot
          xml:space="preserve"
