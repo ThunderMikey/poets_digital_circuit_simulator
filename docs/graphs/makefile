@@ -1,7 +1,7 @@
 io_oracle_overview.pdf: inkscape_svg/io_oracle_overview.svg
 	inkscape $< --export-pdf=$@
-%.pdf: %.gv
+%.pdf: graphviz_src/%.gv
 	dot -Tpdf $< -o $@
 
-%.png: %.gv
+%.png: graphviz_src/%.gv
 	dot -Tpng $< -o $@
