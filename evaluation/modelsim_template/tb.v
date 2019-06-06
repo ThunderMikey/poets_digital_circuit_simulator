@@ -19,8 +19,7 @@ begin
   for (i=0; i<T_ITERATIONS; i=i+1)
     begin
       in = i;
-      wait(out != out_store);
-      out_store = out;
+      #1;
       $fdisplay(log_file, "feedin: %d, result: %d", i, out);
     end
     $fdisplay(log_file, "Duration: %d ps", $time);
