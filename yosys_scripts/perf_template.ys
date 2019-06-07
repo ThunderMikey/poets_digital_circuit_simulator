@@ -1,8 +1,13 @@
 # this is a template
 # T_* need to be replaced
 read_verilog T_VERILOG_PATH
-hierarchy -check -top circuit
+# read_verilog -lib cell_libs/nand_only.v
+hierarchy -check
+# translate processes
 proc
+# convert to gate logic
 techmap
+
+abc -g NAND
 
 write_edif T_EDIF_PATH
