@@ -444,6 +444,63 @@
 					</OnReceive>
 				</InputPin>
 			</DeviceType>
+			<DeviceType id="xor">
+				<Properties>
+					<Scalar type="uint8_t" name="no_inputs" default="2" />
+				</Properties>
+				<State>
+					<Scalar type="uint8_t" name="logic_in0" />
+					<Scalar type="uint8_t" name="logic_in1" />
+					<Scalar type="uint8_t" name="A_recv" />
+					<Scalar type="uint8_t" name="B_recv" />
+				</State>
+				<InputPin name="__init__" messageTypeId="__init__">
+		  			<OnReceive><![CDATA[
+						deviceState->logic_in0 = 0;
+						deviceState->logic_in1 = 0;
+						deviceState->A_recv = 0;
+						deviceState->B_recv = 0;
+					]]>
+					</OnReceive>
+				</InputPin>
+				<!-- OUTPUT_FLAG_{deviceTypeId}_{currPinName} -->
+				<ReadyToSend><![CDATA[
+					if(deviceState->A_recv && deviceState->B_recv){
+						*readyToSend = OUTPUT_FLAG_xor_Y;
+					}
+					else{
+						*readyToSend = 0;
+					}
+				]]>
+				</ReadyToSend>
+
+				<InputPin name="A" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->logic_in0 = message->logic;
+						deviceState->A_recv = 1;
+					]]>
+					</OnReceive>
+				</InputPin>
+
+				<InputPin name="B" messageTypeId="wire">
+					<OnReceive><![CDATA[
+						deviceState->logic_in1 = message->logic;
+						deviceState->B_recv = 1;
+					]]>
+					</OnReceive>
+				</InputPin>
+
+				<OutputPin name="Y" messageTypeId="wire">
+					<OnSend><![CDATA[
+						message->logic = xor2_gate(
+									deviceState->logic_in0,
+									deviceState->logic_in1);
+						deviceState->A_recv = 0;
+						deviceState->B_recv = 0;
+					]]>
+					</OnSend>
+				</OutputPin>
+			</DeviceType>
 		</DeviceTypes>
 	</GraphType>
 </Graphs>

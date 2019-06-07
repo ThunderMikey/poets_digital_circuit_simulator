@@ -7,7 +7,8 @@ gateMappings = {
     "GND": "gnd",
     "VCC": "vcc",
     "__NAND_": "nand",
-    "__NOT_": "not"
+    "__NOT_": "not",
+    "__XOR_": "xor"
 }
 
 def sanitise(string):
