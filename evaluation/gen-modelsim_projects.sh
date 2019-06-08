@@ -2,14 +2,15 @@
 
 TEMPLATE_DIR=./template-modelsim
 COLLECTION_DIR=./modelsim_projs
-MAX_WIDTH=$1
-MAX_DEPTH=$2
-DEPTH_STEP=$3
+BEGIN_WIDTH=$1
+END_WIDTH=$2
+MAX_DEPTH=$3
+DEPTH_STEP=$4
 
 mkdir -p ${COLLECTION_DIR}
 
 for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
-  for ((w=1; w<=${MAX_WIDTH}; w++)); do
+  for ((w=${BEGIN_WIDTH}; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     inst_dir=${COLLECTION_DIR}/${inst}
     cp -rT ${TEMPLATE_DIR} ${inst_dir}
