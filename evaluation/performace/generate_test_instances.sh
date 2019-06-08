@@ -10,7 +10,7 @@ for ((d=1; d<=${MAX_DEPTH}; d++)); do
     inst_PATH=${inst}/${inst}.v
     mkdir ${inst}
     cp ${TEMPLATE} ${inst_PATH}
-    sed -i "3s/T_IO_PAIRS/${w}/g" ${inst_PATH}
-    sed -i "4s/T_DEPTH/${d}/g" ${inst_PATH}
+    sed -i "s/T_IO_PAIRS/${w}/g" ${inst_PATH}
+    sed -i "s/T_DEPTH/${d}/g" ${inst_PATH}
   done
 done

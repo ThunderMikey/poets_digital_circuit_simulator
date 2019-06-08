@@ -1,16 +1,10 @@
-
-module BUF(A, Y);
-input A;
-output Y;
-assign Y = A;
-endmodule
-
+(* _techmap_celltype_ = "$nand"*)
 module NAND(A, B, Y);
 input A, B;
 output Y;
 assign Y = ~(A & B);
 endmodule
-
+/*
 module DFF(C, D, Q);
 input C, D;
 output reg Q;
@@ -29,4 +23,4 @@ always @(posedge C, posedge S, posedge R)
 	else
 		Q <= D;
 endmodule
-
+*/
