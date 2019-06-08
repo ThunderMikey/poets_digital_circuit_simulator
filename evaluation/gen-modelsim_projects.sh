@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TEMPLATE_DIR=./modelsim_template
+TEMPLATE_DIR=./template-modelsim
 COLLECTION_DIR=./modelsim_projs
 MAX_WIDTH=$1
 MAX_DEPTH=$2
