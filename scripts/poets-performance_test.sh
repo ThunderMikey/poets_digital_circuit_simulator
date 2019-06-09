@@ -15,7 +15,7 @@ PTSXMLC_FLAG="ptsxmlc_all_compiled"
 source /local/ecad/setup-quartus17v0.bash
 
 check_done () {
-  grep "$1" $PROGRESS_FILE > /dev/null
+  grep "^$1$" $PROGRESS_FILE > /dev/null
 }
 
 signal_done () {
