@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROG=fulladder
+PROG=2_bit_full_adder
 
 verilator -Wall --cc ${PROG}.v --exe sim_main.cpp \
   --report-unoptflat

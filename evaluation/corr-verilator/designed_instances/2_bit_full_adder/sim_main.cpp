@@ -1,10 +1,10 @@
 #include <verilated.h>
 #include <iostream>
-#include "Vfulladder.h"
+#include "V2_bit_full_adder.h"
 
 int main (int argc, char** argv, char** env){
   Verilated::commandArgs(argc, argv);
-  Vfulladder* top = new Vfulladder;
+  V2_bit_full_adder* top = new V2_bit_full_adder;
   for(int i=0; i<8; i++){
     top->x = i & 1;
     top->y = (i & 2)>>1;
