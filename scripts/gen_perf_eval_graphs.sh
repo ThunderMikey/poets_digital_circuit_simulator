@@ -2,41 +2,30 @@
 
 VERILOG_HOME=evaluation/performace
 YOSYS_TEMPLATE=yosys_scripts/perf_template.ys
-if [ -z $1 ]; then
-  MAX_WDITH=10
-else
-  MAX_WIDTH=$1
-fi
-if [ -z $2 ]; then
-  MAX_DEPTH=1
-else
-  MAX_DEPTH=$2
-fi
-if [ -z $3 ]; then
-  DEPTH_STEP=1
-else
-  DEPTH_STEP=$3
-fi
+BEGIN_WIDTH=$1
+END_WIDTH=$2
+MAX_DEPTH=$3
+DEPTH_STEP=$4
 
 # generate Verilogs
 pushd ${VERILOG_HOME}
-./generate_test_instances.sh ${MAX_WIDTH} ${MAX_DEPTH} ${DEPTH_STEP}
+./generate_test_instances.sh $BEGIN_WIDTH ${END_WIDTH} ${MAX_DEPTH} ${DEPTH_STEP}
 popd
 
 # generate yosys scripts
 for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
-  for ((w=1; w<=${MAX_WIDTH}; w++)); do
+  for ((w=$BEGIN_WIDTH; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     inst_PATH=yosys_scripts/${inst}.ys
     cp ${YOSYS_TEMPLATE} ${inst_PATH}
-    sed -i "s:T_VERILOG_PATH:evaluation/performace/${inst}/${inst}.v:g" ${inst_PATH}
+    sed -i "s:T_VERILOG_PATH:evaluation/performace/instances/${inst}.v:g" ${inst_PATH}
     sed -i "s:T_EDIF_PATH:netlists/${inst}.edif:g" ${inst_PATH}
   done
 done
 
 # call make commands
 for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
-  for ((w=1; w<=${MAX_WIDTH}; w++)); do
+  for ((w=$BEGIN_WIDTH; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     make graphs/${inst}.xml
   done
