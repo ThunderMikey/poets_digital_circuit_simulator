@@ -4,14 +4,15 @@ TEMPLATE=./template/template.v
 INST_DIR=instances
 BEGIN_WIDTH=$1
 END_WIDTH=$2
-MAX_DEPTH=$3
-STEP_DEPTH=$4
+BEGIN_DEPTH=$3
+END_DEPTH=$4
+STEP_DEPTH=$5
 
 DRIVER=sim_main.cpp
 
 mkdir -p $INST_DIR
 
-for ((d=1; d<=${MAX_DEPTH}; d+=$STEP_DEPTH)); do
+for ((d=$BEGIN_DEPTH; d<=${END_DEPTH}; d+=$STEP_DEPTH)); do
   for ((w=$BEGIN_WIDTH; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     inst_path=$INST_DIR/$inst
