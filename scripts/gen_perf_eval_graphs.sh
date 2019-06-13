@@ -4,16 +4,17 @@ VERILOG_HOME=evaluation/performace
 YOSYS_TEMPLATE=yosys_scripts/perf_template.ys
 BEGIN_WIDTH=$1
 END_WIDTH=$2
-MAX_DEPTH=$3
-DEPTH_STEP=$4
+BEGIN_DEPTH=$3
+END_DEPTH=$4
+DEPTH_STEP=$5
 
 # generate Verilogs
 pushd ${VERILOG_HOME}
-./generate_test_instances.sh $BEGIN_WIDTH ${END_WIDTH} ${MAX_DEPTH} ${DEPTH_STEP}
+./generate_test_instances.sh $BEGIN_WIDTH ${END_WIDTH} ${BEGIN_DEPTH} ${END_DEPTH} ${DEPTH_STEP}
 popd
 
 # generate yosys scripts
-for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
+for ((d=$BEGIN_DEPTH; d<=${END_DEPTH}; d+=${DEPTH_STEP})); do
   for ((w=$BEGIN_WIDTH; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     inst_PATH=yosys_scripts/${inst}.ys
@@ -24,7 +25,7 @@ for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
 done
 
 # call make commands
-for ((d=1; d<=${MAX_DEPTH}; d+=${DEPTH_STEP})); do
+for ((d=$BEGIN_DEPTH; d<=${END_DEPTH}; d+=${DEPTH_STEP})); do
   for ((w=$BEGIN_WIDTH; w<=${END_WIDTH}; w++)); do
     inst=${w}x${d}
     make graphs/${inst}.xml
