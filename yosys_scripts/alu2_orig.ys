@@ -1,4 +1,4 @@
-read_verilog test_designs/combinatorial/alu2_orig.v
+read_verilog evaluation/corr-verilator/designed_instances/alu2_orig/alu2_orig.v
 # read_verilog -lib cell_libs/nand_only.v
 hierarchy -check
 # translate processes
