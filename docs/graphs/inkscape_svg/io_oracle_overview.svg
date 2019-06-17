@@ -224,10 +224,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.75378788"
-     inkscape:cx="419.87579"
-     inkscape:cy="492.79635"
+     inkscape:cx="397.97988"
+     inkscape:cy="598.927"
      inkscape:document-units="mm"
-     inkscape:current-layer="g9933"
+     inkscape:current-layer="g9179"
      showgrid="true"
      units="in"
      objecttolerance="10000"
@@ -236,7 +236,7 @@
      inkscape:snap-grids="true"
      inkscape:window-width="1276"
      inkscape:window-height="987"
-     inkscape:window-x="1276"
+     inkscape:window-x="0"
      inkscape:window-y="30"
      inkscape:window-maximized="0"
      guidetolerance="10000">
@@ -326,15 +326,15 @@
        xml:space="preserve"
        id="flowRoot9935"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.26458333,0,0,0.26458333,-12.636181,11.934171)"><flowRegion
+       transform="matrix(0.26458333,0,0,0.26458333,-32.643467,12.636181)"><flowRegion
          id="flowRegion9937"><rect
            id="rect9939"
-           width="166.43216"
-           height="68.261322"
+           width="215.7588"
+           height="50.894485"
            x="144"
            y="912" /></flowRegion><flowPara
          id="flowPara9941"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start">input feeder</flowPara></flowRoot>    <path
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start">stimuli dispatcher</flowPara></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.58999992, 1.58999992;stroke-dashoffset:0;stroke-opacity:1"
        d="m 63.499999,260.35 c 4.233598,0 8.466931,0 11.641786,-3.17496 3.174855,-3.17496 5.291655,-9.52536 7.408214,-15.87504"
        id="path10035"
@@ -353,7 +353,7 @@
            width="192.84424"
            id="rect10064" /></flowRegion><flowPara
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
-         id="flowPara10068">output collector</flowPara></flowRoot>    <path
+         id="flowPara10068">output receiver</flowPara></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:0.26458332;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.5874999, 1.5874999;stroke-dashoffset:0;stroke-opacity:1"
        d="m 152.4,260.35 c -4.23307,0 -8.4664,0 -11.64163,-3.17528 -3.17522,-3.17528 -5.29176,-9.52488 -7.40837,-15.87472"
        id="path10081"
@@ -484,7 +484,7 @@
          xml:space="preserve"
          id="flowRoot8664"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
-         transform="scale(0.26458333)"><flowRegion
+         transform="matrix(0.26458333,0,0,0.26458333,8.7751256,-0.35100503)"><flowRegion
            id="flowRegion8666"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"><rect
              id="rect8668"
@@ -494,7 +494,9 @@
              y="120"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start" /></flowRegion><flowPara
            id="flowPara8670"
-           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.66666603px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start">simulating circuit</flowPara></flowRoot>    </g>
+           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.66666603px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start">circuit under</flowPara><flowPara
+           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.66666603px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start"
+           id="flowPara4877">simulation</flowPara></flowRoot>    </g>
     <g
        id="g9729">
       <use
