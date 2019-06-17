@@ -1,0 +1,20 @@
+read_verilog evaluation/corr-verilator/designed_instances/f51m_orig/f51m_orig.v
+# read_verilog -lib cell_libs/nand_only.v
+hierarchy -check
+# translate processes
+proc; opt
+# convert to gate logic
+techmap; opt
+
+# map logic to cmos cells
+# custom cell lib will result in `inout` direction
+# TODO: find ways to resolve it
+#abc -liberty cell_libs/nand_only.lib
+abc -g NAND
+#stat -liberty cell_libs/nand_only.lib
+
+#write_blif main.blif
+#write_spice main.spice
+write_edif netlists/f51m_orig.edif
+#write_intersynth main.intersynth
+#write_verilog main.v
