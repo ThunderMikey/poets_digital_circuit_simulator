@@ -20,12 +20,20 @@ although the overall observed performance is about 10 times worse than the
 counterpart.
 
 # Hands-on
+
+## Prerequisite:
 You need to have git access to https://github.com/POETSII/graph_schema.git
 because:
 * The POETS graph generation toolchain needs Python libraries in this repo.
 * The POETS simulator, `epoch_sim` is compiled from this repo.
 * This repo is not open to public at the moment.
 
+misc:
+* Docker
+* internet access (for downloading Docker images)
+* GNU utilities, e.g., bash, awk and grep
+* git
+* about 5 GiB of free storage space
 
 ## Setup
 Git LFS is used to store all simulation logs of size 2GiB.
@@ -41,9 +49,10 @@ To simulate the PDCS with `epoch_sim`:
 
 To run the PDCS on the POETS:
 1. Generate POETS graph instance: `make graphs/2_bit_full_adder.xml`
-2. Transfer the graph instance to the POETS host: `defoe.cl.cam.ac.uk`
+2. Transfer the graph instance to the POETS host machine: `defoe.cl.cam.ac.uk`
 3. Compile the graph instace: `pts-xmlc 2_bit_full_adder.xml`
-4. Send the POETS executable to the POETS runtime:
+4. Send the POETS executable to the POETS runtime and redirect simulation
+   results to a file:
   `pts-serve --headless 1 > 2_bit_full_adder.log`
 
 
