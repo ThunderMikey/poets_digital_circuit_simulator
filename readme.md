@@ -27,12 +27,14 @@ because:
 * This repo is not open to public at the moment.
 
 
-## setup
+## Setup
 Git LFS is used to store all simulation logs of size 2GiB.
 Setting `GIT_LFS_SKIP_SMUDGE=1` env var can skip downloading the LFS data.
 
 1. `GIT_LFS_SKIP_SMUDGE=1 git clone git@github.com:ThunderMikey/poets_digital_circuit_simulator.git`
 2. `git submodule init && git submodule update`
+
+## Run the PDCS
 
 To simulate the PDCS with `epoch_sim`:
 `make sim_results/2_bit_full_adder.log`
