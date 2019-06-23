@@ -26,13 +26,24 @@ because:
 * The POETS simulator, `epoch_sim` is compiled from this repo.
 * This repo is not open to public at the moment.
 
+
+## setup
 Git LFS is used to store all simulation logs of size 2GiB.
-`GIT_LFS_SKIP_SMUDGE=1` env var can skip downloading LFS data.
+Setting `GIT_LFS_SKIP_SMUDGE=1` env var can skip downloading the LFS data.
 
 1. `GIT_LFS_SKIP_SMUDGE=1 git clone git@github.com:ThunderMikey/poets_digital_circuit_simulator.git`
 2. `git submodule init && git submodule update`
-3. To generate POETS graph instances: `make graphs/2_bit_full_adder.xml`
-4. Then, to get simulation results: `make sim_results/2_bit_full_adder.log`
+
+To simulate the PDCS with `epoch_sim`:
+`make sim_results/2_bit_full_adder.log`
+
+To run the PDCS on the POETS:
+1. Generate POETS graph instance: `make graphs/2_bit_full_adder.xml`
+2. Transfer the graph instance to the POETS host: `defoe.cl.cam.ac.uk`
+3. Compile the graph instace: `pts-xmlc 2_bit_full_adder.xml`
+4. Send the POETS executable to the POETS runtime:
+  `pts-serve --headless 1 > 2_bit_full_adder.log`
+
 
 # Remote POETS server
 
